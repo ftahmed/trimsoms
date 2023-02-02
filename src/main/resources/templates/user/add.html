@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{user.add.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{user.add.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/users}" th:text="#{user.add.back}" class="btn btn-secondary" />
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('user')}" />
+            <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='firstName')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='lastName')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='email')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='dob', inputClass='js-datepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='phoneNumber')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='role', type='radio')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='locked', type='checkbox')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='enabled', type='checkbox')}" />
+                <input type="submit" th:value="#{user.add.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>
