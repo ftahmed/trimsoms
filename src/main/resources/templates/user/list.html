@@ -25,6 +25,7 @@
                             <th th:text="#{user.phoneNumber.label}" scope="col" />
                             <th th:text="#{user.role.label}" scope="col" />
                             <th th:text="#{user.locked.label}" scope="col" />
+                            <th th:text="#{user.enabled.label}" scope="col" />
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -36,8 +37,9 @@
                             <td th:text="${user.email}" />
                             <td th:text="${user.dob}" />
                             <td th:text="${user.phoneNumber}" />
-                            <td th:text="${user.role}" />
+                            <td th:text="${user.role.label}" />
                             <td th:text="${user.locked}" />
+                            <td th:text="${user.enabled}" />
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/users/edit/{id}(id=${user.id})}" th:text="#{user.list.edit}" class="btn btn-sm btn-info" />

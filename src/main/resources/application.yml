@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/bootify}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://192.168.0.111:5432/bootify}
     username: ${JDBC_DATABASE_USERNAME:myuser}
     password: ${JDBC_DATABASE_PASSWORD:password}
     dbcp2:
@@ -18,6 +18,9 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+    resources.cache-period: 0
+    thymeleaf.cache: false
+    devtools.livereload.enabled: false
   mvc:
     format:
       date: yyyy-MM-dd
@@ -25,3 +28,13 @@ spring:
       time: HH:mm:ss
 springdoc:
   pathsToMatch: /api/**
+
+# spring.devtools.livereload.enabled=false
+
+# Templates reloading during development
+# spring.thymeleaf.prefix=${project.base-dir}/src/main/resources/templates/
+# spring.thymeleaf.cache=false
+
+# Static resources reloading during development
+# spring.resources.static-locations=${project.base-dir}/src/main/resources/static/
+# spring.resources.cache-period=0

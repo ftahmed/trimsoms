@@ -35,7 +35,7 @@
                 </div>
                 <div th:if="${type == 'radio'}" th:each="radioValue : ${__${field}__Values}" class="form-check form-check-inline pt-2">
                     <input th:field="*{__${field}__}" th:value="${radioValue}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" type="radio" class="form-check-input" />
-                    <label th:for="${#ids.prev(field)}" th:text="${radioValue}" class="form-check-label" />
+                    <label th:for="${#ids.prev(field)}" th:text="${radioValue.label}" class="form-check-label" />
                 </div>
                 <div th:replace="~{:: fieldErrors(${object}, ${field})}" />
             </div>

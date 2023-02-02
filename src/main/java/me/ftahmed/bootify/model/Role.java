@@ -6,13 +6,18 @@ public enum Role {
     USER("User"),
     ADMIN("Admin");
 
-    private final String value;
+    private final String label;
 
-    private Role(String value) {
-        this.value = value;
+    private Role(String label) {
+        this.label = label;
     }
 
-    public String getValue() {
-        return value;
+    public String getLabel() {
+        return label;
     }
+
+    // @Override
+    // public String toString() {
+    //     return this.label;
+    // }
 }
