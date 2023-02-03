@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=:55461"
+            "type": "java",
+            "name": "Spring Boot Debug (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 55461
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot BootifySkelApplication",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "me.ftahmed.bootify.BootifySkelApplication",
+            "projectName": "bootify-skel",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

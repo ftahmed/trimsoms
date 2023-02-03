@@ -1,0 +1,24 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.runtimes": [
+        {
+          "name": "JavaSE-1.8",
+          "path": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home",
+          "javadoc": "https://docs.oracle.com/javase/8/docs/api/",
+          "sources": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/src.zip"
+        },
+        {
+          "name": "JavaSE-17",
+          "path": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
+          "javadoc": "https://docs.oracle.com/en/java/javase/17/docs/api",
+          "sources": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home/lib/src.zip",
+          "default": true
+        },
+        {
+          "name": "JavaSE-19",
+          "path": "/opt/homebrew/Cellar/openjdk/19.0.1/libexec/openjdk.jdk/Contents/Home",
+          "javadoc": "https://docs.oracle.com/en/java/javase/19/docs/api",
+          "sources": "/opt/homebrew/Cellar/openjdk/19.0.1/libexec/openjdk.jdk/Contents/Home/lib/src.zip"
+        },
+      ]
+}
