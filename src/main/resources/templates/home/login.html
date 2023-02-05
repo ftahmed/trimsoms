@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{home.login.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <h1 th:text="#{home.login.headline}" class="mb-4" />
+            <p th:utext="#{home.login.text}" />
+            <form th:action="'/j_security_login'" method="post">
+                <div class="row mb-3">
+                    <label th:for="userid" class="col-md-2 col-form-label">
+                        <span th:text="#{home.login.userid.label}" /><span>*</span>
+                    </label>
+                    <div class="col-md-3">
+                        <input name="userid" th:type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label th:for="password" class="col-md-2 col-form-label">
+                        <span th:text="#{home.login.password.label}" /><span>*</span>
+                    </label>
+                    <div class="col-md-3">
+                        <input name="password" th:type="password" class="form-control" />
+                    </div>
+                </div>
+                <input type="submit" th:value="#{home.login.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

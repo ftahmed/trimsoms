@@ -10,7 +10,9 @@
             "name": "Spring Boot Debug (Attach)",
             "request": "attach",
             "hostName": "localhost",
-            "port": 55461
+            "port": 55461,
+            // "preLaunchTask": "Maven: Spring Boot Runner (Debug)",
+            // "postDebugTask": "Terminate"
         },
         {
             "type": "java",
