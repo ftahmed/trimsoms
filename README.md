@@ -1,4 +1,4 @@
-# BootifySkel
+# Bootify
 
 This app was created with Bootify.io - tips on working with the code [can be found here](https://bootify.io/next-steps/). Feel free to contact us for further questions.
 
@@ -37,7 +37,7 @@ Node.js is automatically downloaded using the `frontend-maven-plugin` and the fi
 The application can then be started with the following command - here with the profile `production`:
 
 ```
-java -Dspring.profiles.active=production -jar ./target/bootify-skel-0.0.1-SNAPSHOT.jar
+java -Dspring.profiles.active=production -jar ./target/bootify-0.0.1-SNAPSHOT.jar
 ```
 
 ## Further readings

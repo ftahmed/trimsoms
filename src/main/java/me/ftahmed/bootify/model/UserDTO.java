@@ -3,6 +3,7 @@ package me.ftahmed.bootify.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,16 +28,15 @@ public class UserDTO {
 
     private LocalDate dob;
 
-    @Size(max = 255)
+    @Size(max = 20)
     private String phoneNumber;
-
-    @NotNull
-    private Role role;
 
     @NotNull
     private Boolean locked;
 
     @NotNull
     private Boolean enabled;
+
+    private List<Long> userRoles;
 
 }

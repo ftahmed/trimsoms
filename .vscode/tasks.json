@@ -2,6 +2,15 @@
     "version": "2.0.0",
     "tasks": [{
         "group": "build",
+        "label": "Maven: Package",
+        "type": "shell",
+        "command": "./mvnw",
+        "args": [
+            "package",
+        ],
+      },
+      {
+        "group": "build",
         "label": "Maven: Spring Boot Runner (Debug)",
         "type": "shell",
         "command": "./mvnw",

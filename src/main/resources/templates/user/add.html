@@ -13,15 +13,15 @@
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('user')}" />
-            <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post">
+            <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" class="js-submit-confirm" th:attr="data-confirm-message=#{submit.confirm}">
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='firstName')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='lastName')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='email')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='dob', inputClass='js-datepicker')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='phoneNumber')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='role', type='radio')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='locked', type='checkbox')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='enabled', type='checkbox')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='userRoles', type='multiselect')}" />
                 <input type="submit" th:value="#{user.add.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

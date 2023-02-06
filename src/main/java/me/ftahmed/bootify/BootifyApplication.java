@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class BootifySkelApplication {
+public class BootifyApplication {
 
     public static void main(final String[] args) {
-        SpringApplication.run(BootifySkelApplication.class, args);
+        SpringApplication.run(BootifyApplication.class, args);
     }
 
 }

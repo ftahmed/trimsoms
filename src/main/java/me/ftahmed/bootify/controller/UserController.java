@@ -1,11 +1,13 @@
 package me.ftahmed.bootify.controller;
 
 import jakarta.validation.Valid;
-import me.ftahmed.bootify.model.Role;
+import java.util.stream.Collectors;
+import me.ftahmed.bootify.domain.Role;
 import me.ftahmed.bootify.model.UserDTO;
+import me.ftahmed.bootify.repos.RoleRepository;
 import me.ftahmed.bootify.service.UserService;
 import me.ftahmed.bootify.util.WebUtils;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,14 +24,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, final RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("roleValues", Role.values());
+        model.addAttribute("userRolesValues", roleRepository.findAll(Sort.by("id"))
+                .stream()
+                .collect(Collectors.toMap(Role::getId, Role::getRoleName)));
     }
 
     @GetMapping

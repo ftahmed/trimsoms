@@ -19,9 +19,9 @@
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='email')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='dob', inputClass='js-datepicker')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='phoneNumber')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='role', type='radio')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='locked', type='checkbox')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='enabled', type='checkbox')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='userRoles', type='multiselect')}" />
                 <input type="submit" th:value="#{user.edit.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

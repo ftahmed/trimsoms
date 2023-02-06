@@ -1,24 +1,29 @@
 package me.ftahmed.bootify.service;
 
+import jakarta.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import me.ftahmed.bootify.domain.Role;
+import me.ftahmed.bootify.domain.User;
+import me.ftahmed.bootify.model.UserDTO;
+import me.ftahmed.bootify.repos.RoleRepository;
+import me.ftahmed.bootify.repos.UserRepository;
+import me.ftahmed.bootify.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import me.ftahmed.bootify.domain.User;
-import me.ftahmed.bootify.model.UserDTO;
-import me.ftahmed.bootify.repos.UserRepository;
-import me.ftahmed.bootify.util.NotFoundException;
 
-
+@Transactional
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(final UserRepository userRepository) {
+    public UserService(final UserRepository userRepository, final RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<UserDTO> findAll() {
@@ -58,9 +63,11 @@ public class UserService {
         userDTO.setEmail(user.getEmail());
         userDTO.setDob(user.getDob());
         userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setRole(user.getRole());
         userDTO.setLocked(user.getLocked());
         userDTO.setEnabled(user.getEnabled());
+        userDTO.setUserRoles(user.getUserRoleRoles() == null ? null : user.getUserRoleRoles().stream()
+                .map(role -> role.getId())
+                .collect(Collectors.toList()));
         return userDTO;
     }
 
@@ -70,9 +77,14 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setDob(userDTO.getDob());
         user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setRole(userDTO.getRole());
         user.setLocked(userDTO.getLocked());
         user.setEnabled(userDTO.getEnabled());
+        final List<Role> userRoles = roleRepository.findAllById(
+                userDTO.getUserRoles() == null ? Collections.emptyList() : userDTO.getUserRoles());
+        if (userRoles.size() != (userDTO.getUserRoles() == null ? 0 : userDTO.getUserRoles().size())) {
+            throw new NotFoundException("one of userRoles not found");
+        }
+        user.setUserRoleRoles(userRoles.stream().collect(Collectors.toSet()));
         return user;
     }
 

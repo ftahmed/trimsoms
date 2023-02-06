@@ -9,12 +9,13 @@
         <relativePath /><!-- lookup parent from repository -->
     </parent>
     <groupId>me.ftahmed</groupId>
-    <artifactId>bootify-skel</artifactId>
+    <artifactId>bootify</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bootify-skel</name>
+    <name>bootify</name>
 
     <properties>
         <java.version>17</java.version>
+        <npm.script>build-dev</npm.script>
     </properties>
 
     <dependencies>
@@ -106,7 +107,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>run ${npm.script}</arguments>
                         </configuration>
                     </execution>
                 </executions>

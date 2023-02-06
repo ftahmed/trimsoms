@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Spring Boot BootifyApplication",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "me.ftahmed.bootify.BootifyApplication",
+            "projectName": "bootify",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             // ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=:55461"
             "type": "java",
             "name": "Spring Boot Debug (Attach)",
@@ -13,16 +23,6 @@
             "port": 55461,
             // "preLaunchTask": "Maven: Spring Boot Runner (Debug)",
             // "postDebugTask": "Terminate"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot BootifySkelApplication",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "me.ftahmed.bootify.BootifySkelApplication",
-            "projectName": "bootify-skel",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
