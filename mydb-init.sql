@@ -1,3 +1,7 @@
+-- docker postgresql
+-- $ docker run --name pg_db1 -d -e POSTGRES_PASSWORD=password -p 5432:5432 -v pg_db1:/var/lig/postgresql/data postgres:14
+-- $ docker exec -ti pg_db1 psql -U postgres
+
 -- before running the app
 \c postgres
 -- drop database mydb;
