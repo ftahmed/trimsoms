@@ -52,6 +52,9 @@ public class UserController {
     @PostMapping("/add")
     public String add(@ModelAttribute("user") @Valid final UserDTO userDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+        if (!bindingResult.hasFieldErrors("username") && userService.usernameExists(userDTO.getUsername())) {
+            bindingResult.rejectValue("username", "Exists.user.username");
+        }
         if (!bindingResult.hasFieldErrors("email") && userService.emailExists(userDTO.getEmail())) {
             bindingResult.rejectValue("email", "Exists.user.email");
         }

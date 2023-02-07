@@ -26,6 +26,9 @@
                             <li class="navbar-item" sec:authorize="!isAuthenticated()">
                                 <a th:href="@{/login}" th:text="#{navigation.login}" class="nav-link" />
                             </li>
+                            <li class="navbar-item" sec:authorize="isAuthenticated()">
+                                <div sec:authentication="name" class="nav-link">username</div>
+                            </li>
                             <li class="navbar-item">
                                 <a th:href="@{/}" th:text="#{navigation.home}" class="nav-link" />
                             </li>
@@ -36,9 +39,6 @@
                                     <li><a th:href="@{/users}" th:text="#{user.list.headline}" class="dropdown-item" /></li>
                                     <li><a th:href="@{/roles}" th:text="#{role.list.headline}" class="dropdown-item" /></li>
                                 </ul>
-                            </li>
-                            <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <div sec:authentication="name" class="nav-link">username</div>
                             </li>
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
                                 <a th:href="@{/logout}" th:text="#{navigation.logout}" class="nav-link" />

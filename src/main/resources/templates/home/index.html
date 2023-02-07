@@ -8,6 +8,18 @@
         <div layout:fragment="content">
             <h1 th:text="#{home.index.headline}" class="mb-4" />
             <p th:utext="#{home.index.text}" />
+            <h2 sec:authorize="isAuthenticated()" th:text="#{home.index.authinfo}" class="mb-4" />
+            <p sec:authorize="isAuthenticated()" class="mb-5">
+                <div sec:authorize="hasRole('USER')">This user hasRole USER.</div>
+                <div sec:authorize="hasAuthority('ROLE_USER')">This user hasAuthority ROLE_USER.</div>
+                <div sec:authorize="hasRole('ADMIN')">This user hasRole ADMIN.</div>
+                <div sec:authorize="hasRole('PUBLIC')">This user hasRole PUBLIC.</div>
+                <div sec:authorize="isAuthenticated()">This text is visible to any authenticated users.</div>
+                Authenticated username:
+                <div sec:authentication="name"></div>
+                Authenticated user roles:
+                <div sec:authentication="principal.authorities"></div>
+            </p>
             <p th:utext="#{home.index.swagger}" class="mb-5" />
             <div class="col-md-4 mb-5">
                 <h4 th:text="#{home.index.exploreEntities}" class="mb-3" />

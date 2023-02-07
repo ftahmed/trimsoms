@@ -10,7 +10,9 @@ import me.ftahmed.bootify.model.UserDTO;
 import me.ftahmed.bootify.repos.RoleRepository;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.util.NotFoundException;
+
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -20,16 +22,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(final UserRepository userRepository, final RoleRepository roleRepository) {
+    public UserService(final UserRepository userRepository, final RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserDTO> findAll() {
         final List<User> users = userRepository.findAll(Sort.by("id"));
         return users.stream()
-                .map((user) -> mapToDTO(user, new UserDTO()))
+                .map(user -> mapToDTO(user, new UserDTO()))
                 .collect(Collectors.toList());
     }
 
@@ -58,6 +62,7 @@ public class UserService {
 
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
         userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
@@ -66,12 +71,13 @@ public class UserService {
         userDTO.setLocked(user.getLocked());
         userDTO.setEnabled(user.getEnabled());
         userDTO.setUserRoles(user.getUserRoleRoles() == null ? null : user.getUserRoleRoles().stream()
-                .map(role -> role.getId())
+                .map(Role::getId)
                 .collect(Collectors.toList()));
         return userDTO;
     }
 
     private User mapToEntity(final UserDTO userDTO, final User user) {
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
@@ -86,6 +92,10 @@ public class UserService {
         }
         user.setUserRoleRoles(userRoles.stream().collect(Collectors.toSet()));
         return user;
+    }
+
+    public boolean usernameExists(final String username) {
+        return userRepository.existsByUsernameIgnoreCase(username);
     }
 
     public boolean emailExists(final String email) {

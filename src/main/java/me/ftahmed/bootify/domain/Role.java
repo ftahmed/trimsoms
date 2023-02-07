@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.Getter;
@@ -25,16 +24,7 @@ public class Role {
 
     @Id
     @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "role_id_seq",
-            sequenceName = "role_id_seq",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "role_id_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)

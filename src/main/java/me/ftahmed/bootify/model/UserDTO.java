@@ -15,6 +15,14 @@ public class UserDTO {
     private Long id;
 
     @NotNull
+    @Size(max = 50)
+    private String username;
+    
+    @NotNull
+    @Size(max = 255)
+    private String password;
+    
+    @NotNull
     @Size(max = 255)
     private String firstName;
 
