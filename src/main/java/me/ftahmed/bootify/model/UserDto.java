@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDTO {
+public class UserDto {
 
     private Long id;
 
@@ -45,6 +45,6 @@ public class UserDTO {
     @NotNull
     private Boolean enabled;
 
-    private List<Long> userRoles;
+    private List<Long> roles;
 
 }

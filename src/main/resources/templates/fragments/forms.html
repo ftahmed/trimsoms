@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <body>
-        <div th:fragment="inputRow(object, field)" th:with="type=${type} ?: 'text', required=${required}, inputClass=${inputClass}" th:object="${__${object}__}" class="row mb-3">
+        <div th:fragment="inputRow(object, field)" th:with="type=${type} ?: 'text', required=${required}, readonly=${readonly}, inputClass=${inputClass}" th:object="${__${object}__}" class="row mb-3">
             <div th:if="${type == 'checkbox'}" class="col-md-10 offset-md-2">
                 <div class="form-check">
                     <input th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" class="form-check-input" />
@@ -18,7 +18,7 @@
             </label>
             <div th:if="${type != 'checkbox'}" class="col-md-10">
                 <input th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
-                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" class="form-control" />
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass} + ' ' + ${readonly == 'true' ? 'form-control-plaintext' : ''}" class="form-control" th:readonly="${readonly == 'true'}"/>
                 <textarea th:if="${type == 'textarea'}" th:field="*{__${field}__}"
                         th:classappend="${#fields.hasErrors(field) || #fields.hasErrors(field + '.*') ? 'is-invalid' : ''} + ' ' + ${inputClass}" class="form-control" />
                 <select th:if="${type == 'select' || type == 'multiselect'}" th:field="*{__${field}__}"

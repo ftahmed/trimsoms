@@ -33,8 +33,8 @@ public class Role {
     @Column(nullable = false)
     private Boolean enabled;
 
-    @ManyToMany(mappedBy = "userRoleRoles")
-    private Set<User> userRoleUsers;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

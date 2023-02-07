@@ -7,6 +7,7 @@
     <body>
         <div layout:fragment="content">
             <h1 th:text="#{home.login.headline}" class="mb-4" />
+            <p th:if="${param.error}" class="fs-5 text-danger" th:text="'Wrong user or password.'" />
             <p th:utext="#{home.login.text}" />
             <form class="form-signin" th:action="'/login'" method="post">
                 <div class="row mb-3">

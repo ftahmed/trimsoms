@@ -2,7 +2,7 @@ package me.ftahmed.bootify.rest;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import me.ftahmed.bootify.model.UserDTO;
+import me.ftahmed.bootify.model.UserDto;
 import me.ftahmed.bootify.service.UserService;
 
 import java.util.List;
@@ -31,25 +31,25 @@ public class UserResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable final Long id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable final Long id) {
         return ResponseEntity.ok(userService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-        return new ResponseEntity<>(userService.create(userDTO), HttpStatus.CREATED);
+    public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDto userDto) {
+        return new ResponseEntity<>(userService.create(userDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateUser(@PathVariable final Long id,
-            @RequestBody @Valid final UserDTO userDTO) {
-        userService.update(id, userDTO);
+            @RequestBody @Valid final UserDto userDto) {
+        userService.update(id, userDto);
         return ResponseEntity.ok().build();
     }
 

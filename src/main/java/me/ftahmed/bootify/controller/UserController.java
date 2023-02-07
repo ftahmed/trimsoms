@@ -3,7 +3,7 @@ package me.ftahmed.bootify.controller;
 import jakarta.validation.Valid;
 import java.util.stream.Collectors;
 import me.ftahmed.bootify.domain.Role;
-import me.ftahmed.bootify.model.UserDTO;
+import me.ftahmed.bootify.model.UserDto;
 import me.ftahmed.bootify.repos.RoleRepository;
 import me.ftahmed.bootify.service.UserService;
 import me.ftahmed.bootify.util.WebUtils;
@@ -33,7 +33,7 @@ public class UserController {
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("userRolesValues", roleRepository.findAll(Sort.by("id"))
+        model.addAttribute("rolesValues", roleRepository.findAll(Sort.by("id"))
                 .stream()
                 .collect(Collectors.toMap(Role::getId, Role::getRoleName)));
     }
@@ -45,23 +45,23 @@ public class UserController {
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("user") final UserDTO userDTO) {
+    public String add(@ModelAttribute("user") final UserDto userDto) {
         return "user/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("user") @Valid final UserDTO userDTO,
+    public String add(@ModelAttribute("user") @Valid final UserDto userDto,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("username") && userService.usernameExists(userDTO.getUsername())) {
+        if (!bindingResult.hasFieldErrors("username") && userService.usernameExists(userDto.getUsername())) {
             bindingResult.rejectValue("username", "Exists.user.username");
         }
-        if (!bindingResult.hasFieldErrors("email") && userService.emailExists(userDTO.getEmail())) {
+        if (!bindingResult.hasFieldErrors("email") && userService.emailExists(userDto.getEmail())) {
             bindingResult.rejectValue("email", "Exists.user.email");
         }
         if (bindingResult.hasErrors()) {
             return "user/add";
         }
-        userService.create(userDTO);
+        userService.create(userDto);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
         return "redirect:/users";
     }
@@ -74,17 +74,19 @@ public class UserController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable final Long id,
-            @ModelAttribute("user") @Valid final UserDTO userDTO, final BindingResult bindingResult,
+            @ModelAttribute("user") @Valid final UserDto userDto, final BindingResult bindingResult,
             final RedirectAttributes redirectAttributes) {
         if (!bindingResult.hasFieldErrors("email") &&
-                !userService.get(id).getEmail().equalsIgnoreCase(userDTO.getEmail()) &&
-                userService.emailExists(userDTO.getEmail())) {
+                !userService.get(id).getEmail().equalsIgnoreCase(userDto.getEmail()) &&
+                userService.emailExists(userDto.getEmail())) {
             bindingResult.rejectValue("email", "Exists.user.email");
         }
         if (bindingResult.hasErrors()) {
-            return "user/edit";
+            if (!(bindingResult.getErrorCount() == 1 && bindingResult.hasFieldErrors("password"))) {
+                return "user/edit";
+            }
         }
-        userService.update(id, userDTO);
+        userService.update(id, userDto);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.update.success"));
         return "redirect:/users";
     }

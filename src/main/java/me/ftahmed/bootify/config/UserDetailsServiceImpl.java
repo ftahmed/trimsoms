@@ -2,7 +2,6 @@ package me.ftahmed.bootify.config;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return user.getUserRoleRoles().stream().map(r -> new SimpleGrantedAuthority("ROLE_"+r.getRoleName())).collect(Collectors.toList());
+            return user.getRoles().stream().map(r -> new SimpleGrantedAuthority("ROLE_"+r.getRoleName())).collect(Collectors.toList());
             // SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
             // return Collections.singletonList(authority);
         }

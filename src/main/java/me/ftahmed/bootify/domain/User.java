@@ -67,7 +67,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> userRoleRoles;
+    private Set<Role> roles;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

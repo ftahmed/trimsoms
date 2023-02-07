@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import me.ftahmed.bootify.domain.Role;
 import me.ftahmed.bootify.domain.User;
-import me.ftahmed.bootify.model.UserDTO;
+import me.ftahmed.bootify.model.UserDto;
 import me.ftahmed.bootify.repos.RoleRepository;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.util.NotFoundException;
@@ -30,29 +30,29 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserDTO> findAll() {
+    public List<UserDto> findAll() {
         final List<User> users = userRepository.findAll(Sort.by("id"));
         return users.stream()
-                .map(user -> mapToDTO(user, new UserDTO()))
+                .map(user -> mapToDto(user, new UserDto()))
                 .collect(Collectors.toList());
     }
 
-    public UserDTO get(final Long id) {
+    public UserDto get(final Long id) {
         return userRepository.findById(id)
-                .map(user -> mapToDTO(user, new UserDTO()))
+                .map(user -> mapToDto(user, new UserDto()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final UserDTO userDTO) {
+    public Long create(final UserDto userDto) {
         final User user = new User();
-        mapToEntity(userDTO, user);
+        mapToEntity(userDto, user);
         return userRepository.save(user).getId();
     }
 
-    public void update(final Long id, final UserDTO userDTO) {
+    public void update(final Long id, final UserDto userDto) {
         final User user = userRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(userDTO, user);
+        mapToEntity(userDto, user);
         userRepository.save(user);
     }
 
@@ -60,37 +60,39 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setDob(user.getDob());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setLocked(user.getLocked());
-        userDTO.setEnabled(user.getEnabled());
-        userDTO.setUserRoles(user.getUserRoleRoles() == null ? null : user.getUserRoleRoles().stream()
+    private UserDto mapToDto(final User user, final UserDto userDto) {
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setEmail(user.getEmail());
+        userDto.setDob(user.getDob());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setLocked(user.getLocked());
+        userDto.setEnabled(user.getEnabled());
+        userDto.setRoles(user.getRoles() == null ? null : user.getRoles().stream()
                 .map(Role::getId)
                 .collect(Collectors.toList()));
-        return userDTO;
+        return userDto;
     }
 
-    private User mapToEntity(final UserDTO userDTO, final User user) {
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setDob(userDTO.getDob());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setLocked(userDTO.getLocked());
-        user.setEnabled(userDTO.getEnabled());
+    private User mapToEntity(final UserDto userDto, final User user) {
+        user.setUsername(userDto.getUsername());
+        if (userDto.getPassword() != null)
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setDob(userDto.getDob());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setLocked(userDto.getLocked());
+        user.setEnabled(userDto.getEnabled());
         final List<Role> userRoles = roleRepository.findAllById(
-                userDTO.getUserRoles() == null ? Collections.emptyList() : userDTO.getUserRoles());
-        if (userRoles.size() != (userDTO.getUserRoles() == null ? 0 : userDTO.getUserRoles().size())) {
-            throw new NotFoundException("one of userRoles not found");
+                userDto.getRoles() == null ? Collections.emptyList() : userDto.getRoles());
+        if (userRoles.size() != (userDto.getRoles() == null ? 0 : userDto.getRoles().size())) {
+            throw new NotFoundException("one of user roles not found");
         }
-        user.setUserRoleRoles(userRoles.stream().collect(Collectors.toSet()));
+        user.setRoles(userRoles.stream().collect(Collectors.toSet()));
         return user;
     }
 

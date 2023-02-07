@@ -3,7 +3,7 @@ package me.ftahmed.bootify.rest;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
-import me.ftahmed.bootify.model.RoleDTO;
+import me.ftahmed.bootify.model.RoleDto;
 import me.ftahmed.bootify.service.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,25 +29,25 @@ public class RoleResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleDTO>> getAllRoles() {
+    public ResponseEntity<List<RoleDto>> getAllRoles() {
         return ResponseEntity.ok(roleService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getRole(@PathVariable final Long id) {
+    public ResponseEntity<RoleDto> getRole(@PathVariable final Long id) {
         return ResponseEntity.ok(roleService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createRole(@RequestBody @Valid final RoleDTO roleDTO) {
-        return new ResponseEntity<>(roleService.create(roleDTO), HttpStatus.CREATED);
+    public ResponseEntity<Long> createRole(@RequestBody @Valid final RoleDto roleDto) {
+        return new ResponseEntity<>(roleService.create(roleDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateRole(@PathVariable final Long id,
-            @RequestBody @Valid final RoleDTO roleDTO) {
-        roleService.update(id, roleDTO);
+            @RequestBody @Valid final RoleDto roleDto) {
+        roleService.update(id, roleDto);
         return ResponseEntity.ok().build();
     }
 

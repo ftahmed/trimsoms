@@ -1,7 +1,7 @@
 package me.ftahmed.bootify.controller;
 
 import jakarta.validation.Valid;
-import me.ftahmed.bootify.model.RoleDTO;
+import me.ftahmed.bootify.model.RoleDto;
 import me.ftahmed.bootify.service.RoleService;
 import me.ftahmed.bootify.util.WebUtils;
 import org.springframework.stereotype.Controller;
@@ -32,20 +32,20 @@ public class RoleController {
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("role") final RoleDTO roleDTO) {
+    public String add(@ModelAttribute("role") final RoleDto roleDto) {
         return "role/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("role") @Valid final RoleDTO roleDTO,
+    public String add(@ModelAttribute("role") @Valid final RoleDto roleDto,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("roleName") && roleService.roleNameExists(roleDTO.getRoleName())) {
+        if (!bindingResult.hasFieldErrors("roleName") && roleService.roleNameExists(roleDto.getRoleName())) {
             bindingResult.rejectValue("roleName", "Exists.role.roleName");
         }
         if (bindingResult.hasErrors()) {
             return "role/add";
         }
-        roleService.create(roleDTO);
+        roleService.create(roleDto);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("role.create.success"));
         return "redirect:/roles";
     }
@@ -58,17 +58,17 @@ public class RoleController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable final Long id,
-            @ModelAttribute("role") @Valid final RoleDTO roleDTO, final BindingResult bindingResult,
+            @ModelAttribute("role") @Valid final RoleDto roleDto, final BindingResult bindingResult,
             final RedirectAttributes redirectAttributes) {
         if (!bindingResult.hasFieldErrors("roleName") &&
-                !roleService.get(id).getRoleName().equals(roleDTO.getRoleName()) &&
-                roleService.roleNameExists(roleDTO.getRoleName())) {
+                !roleService.get(id).getRoleName().equals(roleDto.getRoleName()) &&
+                roleService.roleNameExists(roleDto.getRoleName())) {
             bindingResult.rejectValue("roleName", "Exists.role.roleName");
         }
         if (bindingResult.hasErrors()) {
             return "role/edit";
         }
-        roleService.update(id, roleDTO);
+        roleService.update(id, roleDto);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("role.update.success"));
         return "redirect:/roles";
     }
