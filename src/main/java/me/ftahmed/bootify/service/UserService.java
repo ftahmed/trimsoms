@@ -62,6 +62,7 @@ public class UserService {
 
     private UserDto mapToDto(final User user, final UserDto userDto) {
         userDto.setId(user.getId());
+        userDto.setPassword("********");
         userDto.setUsername(user.getUsername());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
@@ -78,7 +79,7 @@ public class UserService {
 
     private User mapToEntity(final UserDto userDto, final User user) {
         user.setUsername(userDto.getUsername());
-        if (userDto.getPassword() != null)
+        if (userDto.getPassword() != null && !"********".equals(userDto.getPassword()))
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());

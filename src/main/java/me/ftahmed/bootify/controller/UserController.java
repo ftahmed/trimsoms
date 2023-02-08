@@ -82,9 +82,7 @@ public class UserController {
             bindingResult.rejectValue("email", "Exists.user.email");
         }
         if (bindingResult.hasErrors()) {
-            if (!(bindingResult.getErrorCount() == 1 && bindingResult.hasFieldErrors("password"))) {
-                return "user/edit";
-            }
+            return "user/edit";
         }
         userService.update(id, userDto);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.update.success"));

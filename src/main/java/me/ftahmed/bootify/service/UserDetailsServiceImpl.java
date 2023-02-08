@@ -1,4 +1,4 @@
-package me.ftahmed.bootify.config;
+package me.ftahmed.bootify.service;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public static class DaoUserDetails implements UserDetails {
-        private User user;
+        private transient User user;
          
         public DaoUserDetails(User user) {
             this.user = user;
@@ -61,7 +61,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      
         @Override
         public boolean isAccountNonLocked() {
-            return true;
+            return !user.getLocked();
         }
      
         @Override
@@ -71,7 +71,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      
         @Override
         public boolean isEnabled() {
-            return true;
+            return user.getEnabled();
         }
      
     }
