@@ -7,7 +7,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -72,7 +71,7 @@ public class WebSecurityConfig {
                     .hasRole("ADMIN")
                 .requestMatchers("/anonymous*")
                 .   anonymous()
-                .requestMatchers("/login*")
+                .requestMatchers("/login*", "/images/**", "/js/**", "/css/**")
                     .permitAll()
                 .anyRequest()
                     .authenticated()
@@ -88,15 +87,11 @@ public class WebSecurityConfig {
                     .logoutUrl("/logout")
                     .deleteCookies("JSESSIONID")
                     // .logoutSuccessHandler(logoutSuccessHandler())
+            // .and()
+            // .exceptionHandling().accessDeniedPage("/accessDenied");
+            // .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
             ;
-        // .and()
-        // .exceptionHandling().accessDeniedPage("/accessDenied");
-        // .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/images/**", "/js/**", "/css/**");
-    }
 }
