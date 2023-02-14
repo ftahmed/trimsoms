@@ -9,7 +9,9 @@
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
-    "flatpickr": "^4.6.13"
+    "flatpickr": "^4.6.13",
+    "jquery": "^3.6.3",
+    "lodash.concat": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -18,6 +20,7 @@
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^4.2.2",
+    "expose-loader": "^4.0.0",
     "mini-css-extract-plugin": "^2.7.2",
     "postcss-loader": "^7.0.2",
     "postcss-preset-env": "^7.8.3",

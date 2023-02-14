@@ -1,3 +1,5 @@
+import $ from "expose-loader?exposes=$,jQuery!jquery";
+import { concat } from "expose-loader?exposes=_.concat!lodash.concat";
 import 'bootstrap';
 import flatpickr from 'flatpickr';
 import 'scss/app.scss';
@@ -32,3 +34,13 @@ document.querySelectorAll('.js-datepicker, .js-timepicker, .js-datetimepicker').
     }
     flatpickr($item, flatpickrConfig);
 });
+
+$("select#roles").change(function () {
+    $(this).find("option:selected")
+           .each(function () {
+        var optionValue = $(this).attr("value");
+        if (optionValue) {
+            console.log('selected role: ' + optionValue);
+        }
+    });
+}).change();
