@@ -44,3 +44,16 @@ $("select#roles").change(function () {
         }
     });
 }).change();
+
+$("select#product").change(function () {
+    $(this).find("option:selected")
+           .each(function () {
+        console.log('selected product: ' + $(this).attr("value"));
+        let notCareLabel = $(this).attr("value") != 'carelabel';
+        $("select#orderType").prop('disabled', notCareLabel);
+        // $("select#orderType").closest('div.row').toggleClass("d-none", notCareLabel);
+        let notHangtag = $(this).attr("value") != 'hangtag';
+        $("input#headerFile").prop('disabled', notHangtag);
+        // $("input#headerFile").closest('div.row').toggleClass("d-none", notHangtag);
+    });
+}).change();

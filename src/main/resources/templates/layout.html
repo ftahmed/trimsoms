@@ -33,11 +33,6 @@
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
                                 <div sec:authentication="name" class="nav-link">username</div>
                             </li>
-                            <!--
-                            <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <a th:href="@{/}" th:text="#{navigation.home}" class="nav-link" />
-                            </li>
-                            -->
                             <li class="navbar-item dropdown" sec:authorize="isAuthenticated()">
                                 <a th:text="#{navigation.go}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false" />
