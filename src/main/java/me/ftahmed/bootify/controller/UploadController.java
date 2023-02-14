@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,26 +20,18 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import static me.ftahmed.bootify.config.Constants.*;
 import me.ftahmed.bootify.util.WebUtils;
 
 @Controller
 @Slf4j
 public class UploadController {
 
-    // @Autowired
-    // private Validator validator;
-
-    private static final String UPLOAD_DIR = "./uploads/";
-
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("productValues", Map.of(
-            "carelabel", "Care label", 
-            "hangtag", "Hangtag"));
+        model.addAttribute("productValues", productValues);
 
-        model.addAttribute("orderTypeValues", Map.of(
-            "SMS", "SMS",
-            "BULK", "BULK"));
+        model.addAttribute("orderTypeValues", orderTypeValues);
     }
 
     @GetMapping("/upload")
@@ -48,30 +39,16 @@ public class UploadController {
         return "upload/page";
     }
 
-    // public String uploadFile(@ModelAttribute("uploadDto") @Valid final Upload upload, 
-    //         @RequestParam("headerFile") MultipartFile headerFile, @RequestParam("orderFile") MultipartFile orderFile,
-    //         final BindingResult bindingResult, RedirectAttributes attributes) {
     @PostMapping("/upload")
     public String uploadFile(@ModelAttribute("upload") @Valid final UploadDto uploadDto, 
             final BindingResult bindingResult, RedirectAttributes attributes) {
 
-        // https://reflectoring.io/bean-validation-with-spring-boot/
-        // https://stackoverflow.com/questions/9257673/conditional-validations-in-spring
-        //
-        // Set<ConstraintViolation<Upload>> violations = validator.validate(upload);
-        // if (!violations.isEmpty()) {
-        //     for (ConstraintViolation<?> violation : violations) {
-        //         log.error(violation.getPropertyPath() + ": " + violation.getMessage());
-        //     }
-        //     throw new ConstraintViolationException(violations);
-        // }
-
         if (!bindingResult.hasFieldErrors("product")) {
-            if ("carelabel".equals(uploadDto.getProduct()) && uploadDto.getOrderType() == null) {
+            if (CARELABEL.equals(uploadDto.getProduct()) && uploadDto.getOrderType() == null) {
                 bindingResult.rejectValue("orderType", "upload.orderType.isnull");
             }
             // check if header file is empty
-            if ("hangtag".equals(uploadDto.getProduct()) && uploadDto.getHeaderFile().isEmpty()) {
+            if (HANGTAG.equals(uploadDto.getProduct()) && uploadDto.getHeaderFile().isEmpty()) {
                 bindingResult.rejectValue("headerFile", "upload.headerFile.empty");
             }
         }

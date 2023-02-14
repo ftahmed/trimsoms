@@ -1,4 +1,4 @@
-package me.ftahmed.bootify;
+package me.ftahmed.bootify.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
