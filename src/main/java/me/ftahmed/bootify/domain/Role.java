@@ -30,18 +30,18 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String roleName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean enabled;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")
     private OffsetDateTime dateCreated;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")
     private OffsetDateTime lastUpdated;
 
 }

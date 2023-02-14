@@ -1,4 +1,5 @@
 spring:
+  # sql.init.mode: always
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/mydb}
     username: ${JDBC_DATABASE_USERNAME:myuser}
@@ -11,13 +12,17 @@ spring:
   jpa:
     show-sql: true
     open-in-view: false
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update
+      # ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate.format_sql: true
       hibernate.jdbc.lob.non_contextual_creation: true
       hibernate.id.new_generator_mappings: true
+      hibernate.connection.charSet: UTF-8
+      # hibernate.hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
   mvc:
     format:
       date: yyyy-MM-dd
