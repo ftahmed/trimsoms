@@ -1,49 +1,66 @@
 {
-    "version": "2.0.0",
-    "tasks": [{
-        "group": "build",
-        "label": "Maven: Package",
-        "type": "shell",
-        "command": "./mvnw",
-        "args": [
-            "package",
-        ],
-      },
-      {
-        "group": "build",
-        "label": "Maven: Spring Boot Runner (Debug)",
-        "type": "shell",
-        "command": "./mvnw",
-        "args": [
-            "spring-boot:run", 
-            "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=:55461'"
-        ],
-        "isBackground": true,
-        // "problemMatcher": [{
-        //     "pattern": [{
-        //         "regexp": "Listening",
-        //         "file": 0,
-        //         "message": 0,
-        //         "line": 1,
-        //         "column": 1
-        //     }],
-        //     "background": {
-        //         "activeOnStart": false, 
-        //         "beginsPattern": { "regexp": "Listening" },
-        //         "endsPattern": { "regexp": "." } 
-        //     },
-        // }]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "group": "build",
+      "label": "Maven: Compile",
+      "type": "shell",
+      "command": "./mvnw",
+      "args": ["-Dwebpack.mode=build-dev", "clean", "compile"]
     },
     {
-        "label": "Terminate",
-        "command": "echo ${input:terminate}",
-        "type": "shell"
+      "group": "build",
+      "label": "Maven: Package",
+      "type": "shell",
+      "command": "./mvnw",
+      "args": ["-Dwebpack.mode=build", "clean", "package"]
     },
+    {
+      "group": "build",
+      "label": "Maven: Webpack Dev Server (Debug)",
+      "type": "shell",
+      "command": "./mvnw",
+      "args": ["-Dwebpack.mode=devserver", "compile"]
+    },
+    {
+      "group": "build",
+      "label": "Maven: Spring Boot Runner (Debug)",
+      "type": "shell",
+      "command": "./mvnw",
+      "args": [
+        "-Dwebpack.mode=build-dev",
+        "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=:55461'",
+        "spring-boot:run",
+        "--debug",
+      ],
+      "isBackground": true
+      // "problemMatcher": [{
+      //     "pattern": [{
+      //         "regexp": "Listening",
+      //         "file": 0,
+      //         "message": 0,
+      //         "line": 1,
+      //         "column": 1
+      //     }],
+      //     "background": {
+      //         "activeOnStart": false,
+      //         "beginsPattern": { "regexp": "Listening" },
+      //         "endsPattern": { "regexp": "." }
+      //     },
+      // }]
+    },
+    {
+      "label": "Terminate",
+      "command": "echo ${input:terminate}",
+      "type": "shell"
+    }
   ],
-  "inputs": [{
-    "id": "terminate",
-    "type": "command",
-    "command": "workbench.action.tasks.terminate",
-    "args": "terminateAll"
-  }]
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
+    }
+  ]
 }
