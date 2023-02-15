@@ -146,5 +146,23 @@ INSERT INTO composition_item (ci_name) VALUES ('Viscose (made from bamboo pulp)'
 INSERT INTO composition_item (ci_name) VALUES ('Wool');
 INSERT INTO composition_item (ci_name) VALUES ('Yak');
 -- select * from "composition_item";
+ 	
+INSERT INTO brand (id, brand_name) VALUES (1, 'Betty Barclay');
+INSERT INTO brand (id, brand_name) VALUES (2, 'Vera Mont');
+INSERT INTO brand (id, brand_name) VALUES (3, 'Gil Bret');
+INSERT INTO brand (id, brand_name) VALUES (4, 'Cartoon');
+INSERT INTO brand (id, brand_name) VALUES (5, 'So Cossy');
+INSERT INTO brand (id, brand_name) VALUES (6, 'Saint Jacques');
+INSERT INTO brand (id, brand_name) VALUES (7, 'Betty & Co');
+INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
+
+-- Oredr status
+-- NEW
+-- CALLED_OFF
+-- ALL
+
+-- Vendor
+-- 213970 - GMS Composite Knitting Ind. Ltd.
+-- 214020 - Dipta Garments Ltd.
 
 COMMIT;

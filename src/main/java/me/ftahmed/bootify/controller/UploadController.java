@@ -1,10 +1,18 @@
 package me.ftahmed.bootify.controller;
 
+import static me.ftahmed.bootify.config.Constants.CARELABEL;
+import static me.ftahmed.bootify.config.Constants.HANGTAG;
+import static me.ftahmed.bootify.config.Constants.UPLOAD_DIR;
+import static me.ftahmed.bootify.config.Constants.orderTypeValues;
+import static me.ftahmed.bootify.config.Constants.productValues;
+
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import static me.ftahmed.bootify.config.Constants.*;
+import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.util.WebUtils;
 
 @Controller
@@ -89,11 +100,31 @@ public class UploadController {
                 return "redirect:/upload";
             }
 
+            uploadOrders(fileName);
+
             // return success response
             attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + fileName + '!');
         }
 
         return "redirect:/upload";
+    }
+
+    private int uploadOrders(String fileName) {
+        try {
+            List<Order> orders = new CsvToBeanBuilder<Order>(new FileReader(UPLOAD_DIR + fileName))
+                .withSeparator(';')
+                .withIgnoreEmptyLine(true)
+                .withIgnoreLeadingWhiteSpace(true)
+                .withFieldAsNull(CSVReaderNullFieldIndicator.BOTH)
+                .withType(Order.class)
+                .build()
+                .parse();
+
+            return orders.size();
+        } catch (Exception e) {
+            log.error("Failed to parse orders CSV", e);
+        }
+        return -1;
     }
 
     @Data
