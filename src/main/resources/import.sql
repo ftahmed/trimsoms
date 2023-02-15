@@ -156,13 +156,8 @@ INSERT INTO brand (id, brand_name) VALUES (6, 'Saint Jacques');
 INSERT INTO brand (id, brand_name) VALUES (7, 'Betty & Co');
 INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
 
--- Oredr status
--- NEW
--- CALLED_OFF
--- ALL
-
 -- Vendor
--- 213970 - GMS Composite Knitting Ind. Ltd.
--- 214020 - Dipta Garments Ltd.
+INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213970', 'GMS Composite Knitting Ind. Ltd.');
+INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214020', 'Dipta Garments Ltd.');
 
 COMMIT;

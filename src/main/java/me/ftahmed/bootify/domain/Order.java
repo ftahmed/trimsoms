@@ -1,6 +1,8 @@
 package me.ftahmed.bootify.domain;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,10 +17,13 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "\"order\"")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -30,28 +35,29 @@ public class Order {
     @CsvIgnore
     private Long id;
     
-    @Column(name="druckdatum") @CsvBindByName(column = "druckdatum") private String printDate;
-    @Column(name="druckmenge") @CsvBindByName(column = "druckmenge") private String quantity;
+    @Transient @CsvBindByName(column = "druckdatum") private String printDateStr;
+    @Column(name="druckdatum") @CsvIgnore private LocalDateTime printDate;
+    @Column(name="druckmenge") @CsvBindByName(column = "druckmenge") private Long quantity;
     @Column(name="pagr") @CsvBindByName(column = "pagr") private String size;
     @Column(name="pakokey") @CsvBindByName(column = "pakokey") private String key;
-    @Column(name="pakokeyFirma") @CsvBindByName(column = "pakokeyFirma") private String company;
-    @Column(name="pakokeySaison") @CsvBindByName(column = "pakokeySaison") private String season;
-    @Column(name="pakokeyVp") @CsvBindByName(column = "pakokeyVp") private String brand;
+    @Column(name="pakokeyFirma") @CsvBindByName(column = "pakokey_firma") private String company;
+    @Column(name="pakokeySaison") @CsvBindByName(column = "pakokey_saison") private String season;
+    @Column(name="pakokeyVp") @CsvBindByName(column = "pakokey_vp") private String brand;
     @Column(name="pakonr") @CsvBindByName(column = "pakonr") private String poNumber;
-    @Column(name="paposFarbbez") @CsvBindByName(column = "paposFarbbez") private String colourDescription;
-    @Column(name="paposFarbnr") @CsvBindByName(column = "paposFarbnr") private String colourNumber;
-    @Column(name="paposMatnr") @CsvBindByName(column = "paposMatnr") private String materialGroup;
-    @Column(name="paposVkabez") @CsvBindByName(column = "paposVkabez") private String articleDescription;
-    @Column(name="paposVkanr") @CsvBindByName(column = "paposVkanr") private String articleNumber;
-    @Column(name="paposVkarkey") @CsvBindByName(column = "paposVkarkey") private String keyArticle;
-    @Column(name="paposVkarkeyFirma") @CsvBindByName(column = "paposVkarkeyFirma") private String keyCompany;
-    @Column(name="paposVkarkeySaison") @CsvBindByName(column = "paposVkarkeySaison") private String seasonDup;
-    @Column(name="paposVkarkeyVp") @CsvBindByName(column = "paposVkarkeyVp") private String brandDup;
+    @Column(name="paposFarbbez") @CsvBindByName(column = "papos_farbbez") private String colourDescription;
+    @Column(name="paposFarbnr") @CsvBindByName(column = "papos_farbnr") private String colourNumber;
+    @Column(name="paposMatnr") @CsvBindByName(column = "papos_matnr") private String materialGroup;
+    @Column(name="paposVkabez") @CsvBindByName(column = "papos_vkabez") private String articleDescription;
+    @Column(name="paposVkanr") @CsvBindByName(column = "papos_vkanr") private String articleNumber;
+    @Column(name="paposVkarkey") @CsvBindByName(column = "papos_vkarkey") private String keyArticle;
+    @Column(name="paposVkarkeyFirma") @CsvBindByName(column = "papos_vkarkey_firma") private String keyCompany;
+    @Column(name="paposVkarkeySaison") @CsvBindByName(column = "papos_vkarkey_saison") private String keySeason;
+    @Column(name="paposVkarkeyVp") @CsvBindByName(column = "papos_vkarkey_vp") private String keyBrand;
     @Column(name="pbetrmatch") @CsvBindByName(column = "pbetrmatch") private String factoryId;
     @Column(name="pbetrname1") @CsvBindByName(column = "pbetrname1") private String factoryName1;
     @Column(name="pbetrnr") @CsvBindByName(column = "pbetrnr") private String vendorId;
     @Column(name="paart") @CsvBindByName(column = "paart") private String poType;
-    @Column(name="paartBez") @CsvBindByName(column = "paartBez") private String poTypeDescription;
+    @Column(name="paartBez") @CsvBindByName(column = "paart_bez") private String poTypeDescription;
     @Column(name="designedin") @CsvBindByName(column = "designedin") private String designedIn;
     @Column(name="grbez1") @CsvBindByName(column = "grbez1") private String size1;
     @Column(name="grbez2") @CsvBindByName(column = "grbez2") private String size2;
@@ -59,13 +65,13 @@ public class Order {
     @Column(name="grbez4") @CsvBindByName(column = "grbez4") private String size4;
     @Column(name="grbez5") @CsvBindByName(column = "grbez5") private String size5;
     @Column(name="grbez6") @CsvBindByName(column = "grbez6") private String size6;
-    @Column(name="grbezUeb1") @CsvBindByName(column = "grbezUeb1") private String sizeHeader1;
-    @Column(name="grbezUeb2") @CsvBindByName(column = "grbezUeb2") private String sizeHeader2;
-    @Column(name="grbezUeb3") @CsvBindByName(column = "grbezUeb3") private String sizeHeader3;
-    @Column(name="grbezUeb4") @CsvBindByName(column = "grbezUeb4") private String sizeHeader4;
-    @Column(name="grbezUeb5") @CsvBindByName(column = "grbezUeb5") private String sizeHeader5;
-    @Column(name="grbezUeb6") @CsvBindByName(column = "grbezUeb6") private String sizeHeader6;
-    @Column(name="pflegehinweis") @CsvBindByName(column = "pflegehinweis") private String additionalWordings;
+    @Column(name="grbezUeb1") @CsvBindByName(column = "grbez_ueb1") private String sizeHeader1;
+    @Column(name="grbezUeb2") @CsvBindByName(column = "grbez_ueb2") private String sizeHeader2;
+    @Column(name="grbezUeb3") @CsvBindByName(column = "grbez_ueb3") private String sizeHeader3;
+    @Column(name="grbezUeb4") @CsvBindByName(column = "grbez_ueb4") private String sizeHeader4;
+    @Column(name="grbezUeb5") @CsvBindByName(column = "grbez_ueb5") private String sizeHeader5;
+    @Column(name="grbezUeb6") @CsvBindByName(column = "grbez_ueb6") private String sizeHeader6;
+    @Column(name="pflegehinweis", columnDefinition = "text") @CsvBindByName(column = "pflegehinweis") private String additionalWordings;
     @Column(name="pflegehinweis2") @CsvBindByName(column = "pflegehinweis2") private String additionalWordingsP2;
     @Column(name="pflegehinw01") @CsvBindByName(column = "pflegehinw01") private String additionalWording01;
     @Column(name="pflegehinw02") @CsvBindByName(column = "pflegehinw02") private String additionalWording02;
@@ -94,17 +100,23 @@ public class Order {
     @Column(name="pflegehinw25") @CsvBindByName(column = "pflegehinw25") private String additionalWording25;
     @Column(name="pflegehinw26") @CsvBindByName(column = "pflegehinw26") private String additionalWording26;
     @Column(name="pflegehinw27") @CsvBindByName(column = "pflegehinw27") private String additionalWording27;
-    @Column(name="absenderName") @CsvBindByName(column = "absenderName") private String divisionName;
-    @Column(name="absenderStrasse") @CsvBindByName(column = "absenderStrasse") private String divisionStreet;
-    @Column(name="absenderOrt") @CsvBindByName(column = "absenderOrt") private String divisionCity;
-    @Column(name="absenderWww") @CsvBindByName(column = "absenderWww") private String divisionWebsite;
+    @Column(name="absenderName") @CsvBindByName(column = "absender_name") private String divisionName;
+    @Column(name="absenderStrasse") @CsvBindByName(column = "absender_strasse") private String divisionStreet;
+    @Column(name="absenderOrt") @CsvBindByName(column = "absender_ort") private String divisionCity;
+    @Column(name="absenderWww") @CsvBindByName(column = "absender_www") private String divisionWebsite;
     @Column(name="madein") @CsvBindByName(column = "madein") private String madeIn;
     @Column(name="canummer") @CsvBindByName(column = "canummer") private String caNumber;
     @Column(name="pflegesym") @CsvBindByName(column = "pflegesym") private String careSymbols;
-    @Column(name="peterHahnNr") @CsvBindByName(column = "peterHahnNr") private String phNumber;
-    @Column(name="tkgZusatz2") @CsvBindByName(column = "tkgZusatz2") private String animalOriginFiber;
-    @Column(name="paposVkaname") @CsvBindByName(column = "paposVkaname") private String articleName;
-    @Column(name="prodDescription") @CsvBindByName(column = "prodDescription") private String productGroup;
+    @Column(name="peterHahnNr") @CsvBindByName(column = "peter_hahn_nr") private String phNumber;
+    @Column(name="tkgZusatz2") @CsvBindByName(column = "tkg_zusatz_2") private String animalOriginFiber;
+    @Column(name="paposVkaname") @CsvBindByName(column = "papos_vkaname") private String articleName;
+    @Column(name="prodDescription") @CsvBindByName(column = "prod_description") private String productGroup;
+
+    public void setPrintDateStr(String dateString) {
+        // This method can parse the dateString and set date object as well
+        this.printDateStr = dateString;
+        setPrintDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+    }
 
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")
