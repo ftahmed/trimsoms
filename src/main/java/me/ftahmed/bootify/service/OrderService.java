@@ -1,6 +1,9 @@
 package me.ftahmed.bootify.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -14,6 +17,10 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    public List<Order> findAll() {
+        return orderRepository.findAll(Sort.by("id"));
+    }
 
     public Long create(final Order order) {
         return orderRepository.save(order).getId();

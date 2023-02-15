@@ -153,4 +153,10 @@ public class UploadController {
         MultipartFile orderFile;
     }
 
+    @GetMapping("/orders")
+    public String list(final Model model) {
+        model.addAttribute("orders", orderService.findAll());
+        return "upload/list";
+    }
+
 }
