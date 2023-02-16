@@ -26,5 +26,8 @@
           "database": "mydb",
           "username": "myuser"
         }
-      ]
+      ],
+      "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
+      // "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -javaagent:\"/home/tanvir/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
+      "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home"
 }
