@@ -9,12 +9,12 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 th:text="#{order.list.headline}" class="flex-grow-1" />
             </div>
-            <div th:if="${orders.empty}" th:text="#{order.list.empty}" />
-            <div th:if="${!orders.empty}" class="table-responsive">
+            <!-- purchase orders -->
+            <div th:if="${pos.empty}" th:text="#{order.list.empty}" />
+            <div th:if="${!pos.empty}" class="table-responsive">
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <!-- <th th:text="#{order.id.label}" scope="col" /> -->
                             <th th:text="#{order.brand.label}" scope="col" />
                             <th th:text="#{order.season.label}" scope="col" />
                             <th th:text="#{order.poNumber.label}" scope="col" />
@@ -22,28 +22,25 @@
                             <th th:text="#{order.orderType.label}" scope="col" />
                             <th th:text="#{order.vendorId.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
-                            <!-- <th th:text="#{order.quantity.label}" scope="col" /> -->
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="order : ${orders}">
-                            <!-- <td th:text="${order.id}" /> -->
-                            <td th:text="${order.brand}" />
-                            <td th:text="${order.season}" />
-                            <td th:text="${order.poNumber}" />
-                            <td th:text="${order.articleNumber}" />
-                            <td th:text="${order.orderType}" />
-                            <td th:text="${order.vendorId}" />
-                            <td th:text="${order.factoryName1}" />
-                            <!-- <td th:text="${order.quantity}" th:align="right" /> -->
-                            <td th:text="${order.orderStatus}"/>
+                        <tr th:each="po : ${pos}">
+                            <td th:text="${po.brand}" />
+                            <td th:text="${po.season}" />
+                            <td th:text="${po.poNumber}" />
+                            <td th:text="${po.articleNumber}" />
+                            <td th:text="${po.orderType}" />
+                            <td th:text="${po.vendorId}" />
+                            <td th:text="${po.factoryName1}" />
+                            <td th:text="${po.orderStatus}"/>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/order/quantity/{poNumber}(poNumber=${order.poNumber})}" th:text="#{order.list.quantity}" class="btn btn-sm btn-secondary" />
-                                    <a th:href="@{/order/composition/{poNumber}(poNumber=${order.poNumber})}" th:text="#{order.list.composition}" class="btn btn-sm btn-primary" />
-                                    <form th:action="@{/order/layout/{poNumber}(poNumber=${order.poNumber})}"
+                                    <a th:href="@{/order/quantity/{poNumber}(poNumber=${po.poNumber})}" th:text="#{order.list.quantity}" class="btn btn-sm btn-secondary" />
+                                    <a th:href="@{/order/composition/{poNumber}(poNumber=${po.poNumber})}" th:text="#{order.list.composition}" class="btn btn-sm btn-primary" />
+                                    <form th:action="@{/order/layout/{poNumber}(poNumber=${po.poNumber})}"
                                             th:data-confirm-message="#{layout.confirm}" method="post" class="js-submit-confirm d-inline">
                                         <button th:text="#{order.list.layout}" type="submit" class="btn btn-sm btn-primary" />
                                     </form>
@@ -52,6 +49,59 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <!-- order lines in the prchase order -->
+            <div th:if="${!pos.empty && orders.empty}" th:text="#{order.list.empty}" />
+            <div th:if="${!orders.empty}" class="table-responsive">
+                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                    <input type="submit" th:value="#{order.submit.label}" class="btn btn-primary mt-4" />
+                    <table class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th th:text="#{order.id.label}" scope="col" />
+                                <th th:text="#{order.size.label}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader1}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader2}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader3}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader4}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader5}" scope="col" />
+                                <th th:text="${orders[0].sizeHeader6}" scope="col" />
+                                <th th:text="#{order.quantity.label}" scope="col" />
+                                <th scope="col" style="width: 20%;">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" th:id="changeqty" />
+                                        <button type="button" class="btn btn-warning">%</button>
+                                        <button type="button" class="btn btn-info">+</button>
+                                        <button type="button" class="btn btn-secondary">&#9100;</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orders}">
+                                <td th:text="${order.id}" />
+                                <td th:text="${order.size}" />
+                                <td th:text="${order.size1}" />
+                                <td th:text="${order.size2}" />
+                                <td th:text="${order.size3}" />
+                                <td th:text="${order.size4}" />
+                                <td th:text="${order.size5}" />
+                                <td th:text="${order.size6}" />
+                                <td th:text="${order.quantity}" th:align="right" />
+                                <td>
+                                    <div class="float-end text-nowrap">
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control is-invalid null " th:id="quantity" th:name="quantity" th:value="${order.quantity}" />
+                                            <div class="invalid-feedback d-block">
+                                                <p class="mb-0">Please provide a value.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </body>

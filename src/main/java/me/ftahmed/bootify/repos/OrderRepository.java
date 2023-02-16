@@ -12,7 +12,7 @@ import me.ftahmed.bootify.domain.PurchaseOrder;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     
     List<Order> findByBrandAndSeason(String brand, String season);
-    Optional<Order> findByPoNumber(String poNumber);
+    List<Order> findByPoNumber(String poNumber);
 
     
     @Query("SELECT DISTINCT NEW me.ftahmed.bootify.domain.PurchaseOrder(orderType, orderStatus, brand, season, poNumber, articleNumber, vendorId, factoryName1) FROM Order o")

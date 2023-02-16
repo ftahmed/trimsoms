@@ -23,6 +23,14 @@ public class OrderService {
         return orderRepository.findAll(Sort.by("id"));
     }
 
+    public List<Order> findByBrandAndSeason(String brand, String season) {
+        return orderRepository.findByBrandAndSeason(brand, season);
+    }
+
+    public List<Order> findByPoNumber(String poNumber) {
+        return orderRepository.findByPoNumber(poNumber);
+    }
+
     public List<PurchaseOrder> findAllDistinctPurchaseOrders() {
         return orderRepository.findAllDistinctPurchaseOrders();
     }

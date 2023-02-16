@@ -54,6 +54,9 @@ public class OrderController {
         model.addAttribute("productValues", productValues);
 
         model.addAttribute("orderTypeValues", orderTypeValues);
+
+        model.addAttribute("pos", List.of());
+        model.addAttribute("orders", List.of());
     }
 
     @GetMapping("/order/upload")
@@ -170,13 +173,14 @@ public class OrderController {
     @GetMapping("/order/list")
     public String list(final Model model) {
         // model.addAttribute("orders", orderService.findAll());
-        model.addAttribute("orders", orderService.findAllDistinctPurchaseOrders());
+        model.addAttribute("pos", orderService.findAllDistinctPurchaseOrders());
         return "order/list";
     }
 
     @GetMapping("/order/quantity/{poNumber}")
     public String list(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
-        model.addAttribute("orders", orderService.findDistinctPurchaseOrdersByPoNumber(poNumber));
+        model.addAttribute("pos", orderService.findDistinctPurchaseOrdersByPoNumber(poNumber));
+        model.addAttribute("orders", orderService.findByPoNumber(poNumber));
         return "order/list";
     }
 
