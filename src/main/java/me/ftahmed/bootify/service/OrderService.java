@@ -27,6 +27,10 @@ public class OrderService {
         return orderRepository.findAllDistinctPurchaseOrders();
     }
 
+    public List<PurchaseOrder> findDistinctPurchaseOrdersByPoNumber(String poNumber) {
+        return orderRepository.findDistinctPurchaseOrdersByPoNumber(poNumber);
+    }
+
     public Long create(final Order order) {
         return orderRepository.save(order).getId();
     }

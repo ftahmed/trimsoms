@@ -41,9 +41,9 @@
                             <td th:text="${order.orderStatus}"/>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/order/quantity/{id}(id=${order.poNumber})}" th:text="#{order.list.quantity}" class="btn btn-sm btn-secondary" />
-                                    <a th:href="@{/order/composition/{id}(id=${order.poNumber})}" th:text="#{order.list.composition}" class="btn btn-sm btn-primary" />
-                                    <form th:action="@{/order/layout/{id}(id=${order.poNumber})}"
+                                    <a th:href="@{/order/quantity/{poNumber}(poNumber=${order.poNumber})}" th:text="#{order.list.quantity}" class="btn btn-sm btn-secondary" />
+                                    <a th:href="@{/order/composition/{poNumber}(poNumber=${order.poNumber})}" th:text="#{order.list.composition}" class="btn btn-sm btn-primary" />
+                                    <form th:action="@{/order/layout/{poNumber}(poNumber=${order.poNumber})}"
                                             th:data-confirm-message="#{layout.confirm}" method="post" class="js-submit-confirm d-inline">
                                         <button th:text="#{order.list.layout}" type="submit" class="btn btn-sm btn-primary" />
                                     </form>

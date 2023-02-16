@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -170,6 +171,12 @@ public class OrderController {
     public String list(final Model model) {
         // model.addAttribute("orders", orderService.findAll());
         model.addAttribute("orders", orderService.findAllDistinctPurchaseOrders());
+        return "order/list";
+    }
+
+    @GetMapping("/order/quantity/{poNumber}")
+    public String list(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
+        model.addAttribute("orders", orderService.findDistinctPurchaseOrdersByPoNumber(poNumber));
         return "order/list";
     }
 
