@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import me.ftahmed.bootify.domain.Order;
+import me.ftahmed.bootify.domain.PurchaseOrder;
 import me.ftahmed.bootify.repos.OrderRepository;
 
 
@@ -20,6 +21,10 @@ public class OrderService {
 
     public List<Order> findAll() {
         return orderRepository.findAll(Sort.by("id"));
+    }
+
+    public List<PurchaseOrder> findAllDistinctPurchaseOrders() {
+        return orderRepository.findAllDistinctPurchaseOrders();
     }
 
     public Long create(final Order order) {

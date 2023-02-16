@@ -168,7 +168,8 @@ public class OrderController {
 
     @GetMapping("/order/list")
     public String list(final Model model) {
-        model.addAttribute("orders", orderService.findAll());
+        // model.addAttribute("orders", orderService.findAll());
+        model.addAttribute("orders", orderService.findAllDistinctPurchaseOrders());
         return "order/list";
     }
 

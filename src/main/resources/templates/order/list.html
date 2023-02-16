@@ -22,7 +22,7 @@
                             <th th:text="#{order.orderType.label}" scope="col" />
                             <th th:text="#{order.vendorId.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
-                            <th th:text="#{order.quantity.label}" scope="col" />
+                            <!-- <th th:text="#{order.quantity.label}" scope="col" /> -->
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
                         </tr>
@@ -37,12 +37,13 @@
                             <td th:text="${order.orderType}" />
                             <td th:text="${order.vendorId}" />
                             <td th:text="${order.factoryName1}" />
-                            <td th:text="${order.quantity}" th:align="right" />
+                            <!-- <td th:text="${order.quantity}" th:align="right" /> -->
                             <td th:text="${order.orderStatus}"/>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/orders/composition/{id}(id=${order.id})}" th:text="#{order.list.composition}" class="btn btn-sm btn-secondary" />
-                                    <form th:action="@{/orders/layout/{id}(id=${order.id})}"
+                                    <a th:href="@{/order/quantity/{id}(id=${order.poNumber})}" th:text="#{order.list.quantity}" class="btn btn-sm btn-secondary" />
+                                    <a th:href="@{/order/composition/{id}(id=${order.poNumber})}" th:text="#{order.list.composition}" class="btn btn-sm btn-primary" />
+                                    <form th:action="@{/order/layout/{id}(id=${order.poNumber})}"
                                             th:data-confirm-message="#{layout.confirm}" method="post" class="js-submit-confirm d-inline">
                                         <button th:text="#{order.list.layout}" type="submit" class="btn btn-sm btn-primary" />
                                     </form>
