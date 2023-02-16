@@ -35,6 +35,9 @@ public class Order {
     @CsvIgnore
     private Long id;
     
+    @Column(name="type") @CsvIgnore private String orderType;
+    @Column(name="status") @CsvIgnore private String orderStatus;
+
     @Transient @CsvBindByName(column = "druckdatum") private String printDateStr;
     @Column(name="druckdatum") @CsvIgnore private LocalDateTime printDate;
     @Column(name="druckmenge") @CsvBindByName(column = "druckmenge") private Long quantity;

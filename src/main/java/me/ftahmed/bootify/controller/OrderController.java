@@ -6,8 +6,11 @@ import static me.ftahmed.bootify.config.Constants.UPLOAD_DIR;
 import static me.ftahmed.bootify.config.Constants.orderTypeValues;
 import static me.ftahmed.bootify.config.Constants.productValues;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,11 +38,12 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.service.OrderService;
+import me.ftahmed.bootify.util.ByteUtils;
 import me.ftahmed.bootify.util.WebUtils;
 
 @Controller
 @Slf4j
-public class UploadController {
+public class OrderController {
 
     @Autowired 
     private OrderService orderService;
@@ -51,12 +55,12 @@ public class UploadController {
         model.addAttribute("orderTypeValues", orderTypeValues);
     }
 
-    @GetMapping("/upload")
+    @GetMapping("/order/upload")
     public String uploadPage(@ModelAttribute("upload") final UploadDto uploadDto) {
-        return "upload/page";
+        return "order/upload";
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/order/upload")
     public String uploadFile(@ModelAttribute("upload") @Valid final UploadDto uploadDto, 
             final BindingResult bindingResult, RedirectAttributes attributes) {
 
@@ -73,7 +77,7 @@ public class UploadController {
             bindingResult.rejectValue("orderFile", "upload.orderFile.empty");
         }
         if (bindingResult.hasErrors()) {
-            return "upload/page";
+            return "order/upload";
         }
 
         MultipartFile headerFile = uploadDto.getHeaderFile();
@@ -86,7 +90,7 @@ public class UploadController {
             } catch (IOException e) {
                 log.error("Failed to upload file", e);
                 attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.headerFile.fail") + " " + e.getMessage() + '!');
-                return "redirect:/upload";
+                return "redirect:/order/upload";
             }
 
             // return success response
@@ -103,23 +107,30 @@ public class UploadController {
             } catch (IOException e) {
                 log.error("Failed to upload file", e);
                 attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + " " + e.getMessage() + '!');
-                return "redirect:/upload";
+                return "redirect:/order/upload";
             }
 
-            uploadOrders(fileName);
+            uploadOrders(fileName, uploadDto.orderType);
 
             // return success response
             attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + fileName + '!');
         }
 
-        return "redirect:/upload";
+        return "redirect:/order/list";
     }
 
-    private int uploadOrders(String fileName) {
+    private int uploadOrders(String fileName, String orderType) {
+        Charset cs = StandardCharsets.UTF_8;
+        try (FileInputStream fis = new FileInputStream(UPLOAD_DIR + fileName)) {
+            cs = ByteUtils.detectEncoding(fis);
+        } catch (Exception e) {
+            log.warn("Failed to detect charset", e);
+        }
         try {
+            
             HeaderColumnNameMappingStrategy<Order> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(Order.class);
-            List<Order> orders = new CsvToBeanBuilder<Order>(new FileReader(UPLOAD_DIR + fileName))
+            List<Order> orders = new CsvToBeanBuilder<Order>(new FileReader(UPLOAD_DIR + fileName, cs))
                 .withSeparator(';')
                 .withIgnoreEmptyLine(true)
                 .withIgnoreLeadingWhiteSpace(true)
@@ -131,6 +142,8 @@ public class UploadController {
                 .parse();
 
             for (Order o : orders) {
+                o.setOrderType(orderType);
+                o.setOrderStatus("New");
                 Long oid = orderService.create(o);
             }
             return orders.size();
@@ -153,10 +166,10 @@ public class UploadController {
         MultipartFile orderFile;
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/order/list")
     public String list(final Model model) {
         model.addAttribute("orders", orderService.findAll());
-        return "upload/list";
+        return "order/list";
     }
 
 }

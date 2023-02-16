@@ -31,13 +31,15 @@
                                 <a th:href="@{/login}" th:text="#{navigation.login}" class="nav-link" />
                             </li>
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <div sec:authentication="name" class="nav-link">username</div>
+                                <div class="input-group">
+                                    <div sec:authentication="name" class="nav-link  input-group-text">username</div>
+                                </div>
                             </li>
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <a th:href="@{/upload}" th:text="#{upload.page.headline}" class="nav-link" />
+                                <a th:href="@{/order/upload}" th:text="#{upload.page.headline}" class="nav-link" />
                             </li>
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <a th:href="@{/orders}" th:text="#{orders.page.headline}" class="nav-link" />
+                                <a th:href="@{/order/list}" th:text="#{orders.page.headline}" class="nav-link" />
                             </li>
                             <li class="navbar-item dropdown" sec:authorize="isAuthenticated()">
                                 <a th:text="#{navigation.admin}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"
