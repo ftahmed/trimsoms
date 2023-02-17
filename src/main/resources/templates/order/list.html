@@ -52,6 +52,8 @@
             </div>
             <!-- composition form -->
             <div th:if="${!orders.empty}" class="content">
+                <p class="h5" th:text="#{order.subhead.composition}">Composition list editor</p>
+                <p class="border-top">&nbsp;</p>
                 <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
                     <div class="row">
                         <div class="col">
@@ -94,7 +96,7 @@
                                     <select id="cilist" name="cilist" size="5" class="form-select">
                                         <option></option>
                                     </select>
-                                    <!-- <div class="row"> -->
+                                    <div class="row">
                                         <div class="col input-group">
                                             <button type="button" class="btn btn-outline-warning" title="Modify">&larr;</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Move Up">&uarr;</button>
@@ -104,72 +106,119 @@
                                         <div class="col">
                                             <input type="submit" th:value="#{cilist.submit.label}" class="btn btn-primary float-end" />
                                         </div>
-                                    <!-- </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+                </form>
+            </div>
+            <!-- layout form -->
+            <div th:if="${!orders.empty}" class="content">
+                <p class="h5" th:text="#{order.subhead.layout}">Layout approval management</p>
+                <p class="border-top">&nbsp;</p>
+                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                    <div class="row">
+                        <div class="col">
+                            <div class="row mb-3">
+                                <label th:for="layoutfile" class="col-md-3 col-form-label">
+                                    <span th:text="#{layout.approve.label}" />
+                                </label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <img src="/images/attachment.svg" alt="Layout file" class="d-inline-block align-top" width="20" height="20">
+                                        </span>
+                                        <button type="button" class="btn btn-info form-control" th:text="#{layout.approve.view}">View Layout</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-primary form-control" th:text="#{layout.approve.button}" title="Approve layout">Approve</button>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="layoutfile" class="col-md-3 col-form-label">
+                                    <span th:text="#{layout.reject.label}" />
+                                </label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <img src="/images/dislike.svg" alt="Layout file" class="d-inline-block align-top" width="20" height="20">
+                                        </span>
+                                        <input id="reject" name="reject" th:type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger form-control" th:text="#{layout.reject.button}" title="Reject layout">Reject</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">&nbsp;</div>
+                    </div>
                 </form>
             </div>
             <!-- order lines in the prchase order -->
-            <div th:if="${!pos.empty && orders.empty}" th:text="#{order.list.empty}" />
-            <div th:if="${!orders.empty}" class="table-responsive">
-                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
-                    <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" />
-                    <table class="table table-striped table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th th:text="#{order.id.label}" scope="col" />
-                                <th th:text="#{order.size.label}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader1}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader2}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader3}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader4}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader5}" scope="col" />
-                                <th th:text="${orders[0].sizeHeader6}" scope="col" />
-                                <th th:text="#{order.quantity.label}" scope="col" />
-                                <th scope="col" style="width: 20%;">
-                                    <div class="input-group input-group-sm">
-                                        <div class="btn-group" role="group" aria-label="Change quantity">
-                                            <input type="radio" class="btn-check" name="changetype" id="changetype1" checked>
-                                            <label class="btn btn-light" for="changetype1" title="Change by %">%</label>
-                                            <input type="radio" class="btn-check" name="changetype" id="changetype2">
-                                            <label class="btn btn-light" for="changetype2" title="Change by value">+</label>
+            <div class="content">
+                <p th:if="${!orders.empty}" class="h5" th:text="#{order.subhead.quantities}">Manage quantities</p>
+                <p th:if="${!orders.empty}" class="border-top">&nbsp;</p>
+                <div th:if="${!pos.empty && orders.empty}" th:text="#{order.list.empty}" />
+                <div th:if="${!orders.empty}" class="table-responsive">
+                    <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                        <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" />
+                        <table class="table table-striped table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th th:text="#{order.id.label}" scope="col" />
+                                    <th th:text="#{order.size.label}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader1}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader2}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader3}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader4}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader5}" scope="col" />
+                                    <th th:text="${orders[0].sizeHeader6}" scope="col" />
+                                    <th th:text="#{order.quantity.label}" scope="col" />
+                                    <th scope="col" style="width: 20%;">
+                                        <div class="input-group input-group-sm">
+                                            <div class="btn-group" role="group" aria-label="Change quantity">
+                                                <input type="radio" class="btn-check" name="changetype" id="changetype1" checked>
+                                                <label class="btn btn-light" for="changetype1" title="Change by %">%</label>
+                                                <input type="radio" class="btn-check" name="changetype" id="changetype2">
+                                                <label class="btn btn-light" for="changetype2" title="Change by value">+</label>
+                                            </div>
+                                            &nbsp;
+                                            <input type="text" class="form-control" th:id="changeqty" />
+                                            <button type="button" class="btn btn-outline-primary">&#10003;</button>
+                                            <button type="button" class="btn btn-outline-secondary">&#8630;</button>
                                         </div>
-                                        &nbsp;
-                                        <input type="text" class="form-control" th:id="changeqty" />
-                                        <button type="button" class="btn btn-outline-primary">&#10003;</button>
-                                        <button type="button" class="btn btn-outline-secondary">&#8630;</button>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="order : ${orders}">
-                                <td th:text="${order.id}" />
-                                <td th:text="${order.size}" />
-                                <td th:text="${order.size1}" />
-                                <td th:text="${order.size2}" />
-                                <td th:text="${order.size3}" />
-                                <td th:text="${order.size4}" />
-                                <td th:text="${order.size5}" />
-                                <td th:text="${order.size6}" />
-                                <td th:text="${order.quantity}" />
-                                <td>
-                                    <div class="float-end text-nowrap">
-                                        <div class="col">
-                                            <input type="text" class="form-control is-invalid null " th:id="quantity" th:name="quantity" th:value="${order.quantity}" />
-                                            <div class="invalid-feedback d-block">
-                                                <p class="mb-0">Please provide a value.</p>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${orders}">
+                                    <td th:text="${order.id}" />
+                                    <td th:text="${order.size}" />
+                                    <td th:text="${order.size1}" />
+                                    <td th:text="${order.size2}" />
+                                    <td th:text="${order.size3}" />
+                                    <td th:text="${order.size4}" />
+                                    <td th:text="${order.size5}" />
+                                    <td th:text="${order.size6}" />
+                                    <td th:text="${order.quantity}" />
+                                    <td>
+                                        <div class="float-end text-nowrap">
+                                            <div class="col">
+                                                <input type="text" class="form-control is-invalid null " th:id="quantity" th:name="quantity" th:value="${order.quantity}" />
+                                                <div class="invalid-feedback d-block">
+                                                    <p class="mb-0">Please provide a value.</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
             </div>
         </div>
     </body>
