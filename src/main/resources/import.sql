@@ -1,15 +1,23 @@
+CREATE extension pgcrypto;
+
 BEGIN;
 
+-- User
 INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('u1', 'User1', 'Ahmed', '2000-01-01', 'u1@ftahmed.me', '0123456789', '$2a$08$zO3pHtw.LFU6w18PAoOStu0tRuztdDeX7l2qyfsII.JyogbxKIw9a');
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('u2', 'User2', 'Ahmed', '2000-02-02', 'u2@ftahmed.me', '$2a$08$rrQ40ptPiNerrVJl9Ku9/O3uAtcf1fiq92.iP/958Uo5quFxacvlC');
-INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('a1', 'Admin1', 'Ahmed', '2000-03-03', 'a1@ftahmed.me', '0123456780', '$2a$08$EAIZ66mh4MGpOW/oQN3SgehC..2hiMLGXY6r3pR37bbFO0EdVXDB6');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('up1', (TABLE salt)) WHERE username = 'u1';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('u2', 'User2', 'Ahmed', '2000-02-02', 'u2@ftahmed.me', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('up1', (TABLE salt)) WHERE username = 'u2';
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('a1', 'Admin1', 'Ahmed', '2000-03-03', 'a1@ftahmed.me', '0123456780', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('up1', (TABLE salt)) WHERE username = 'a1';
 -- select * from "user";
 
+-- Role
 INSERT INTO role (role_name) VALUES ('USER');
 INSERT INTO role (role_name) VALUES ('ADMIN');
 INSERT INTO role (role_name) VALUES ('PUBLIC');
 -- select * from "role";
 
+-- UserRole ManyToMany relation
 --WITH u1 AS (SELECT id FROM "user" WHERE username='u1'), r1 AS (SELECT id FROM role WHERE role_name='USER') INSERT INTO user_role (user_id, role_id) select (table u1), (table r1);
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='u1'), (SELECT id FROM role WHERE role_name='USER'));
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='u1'), (SELECT id FROM role WHERE role_name='ADMIN'));
@@ -17,6 +25,7 @@ INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE us
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='a1'), (SELECT id FROM role WHERE role_name='ADMIN'));
 -- SELECT username, first_name, role_name FROM "user_role", "user", "role" WHERE user_id="user".id AND role_id="role".id;
 
+-- Part
 INSERT INTO part (part_name) VALUES ('Adorn');
 INSERT INTO part (part_name) VALUES ('Backpart');
 INSERT INTO part (part_name) VALUES ('Bottom hem');
@@ -55,6 +64,7 @@ INSERT INTO part (part_name) VALUES ('Vest');
 INSERT INTO part (part_name) VALUES ('Yoke');
 -- select * from "part";
 
+-- Composition Item
 INSERT INTO composition_item (ci_name) VALUES ('Acetate');
 INSERT INTO composition_item (ci_name) VALUES ('Acrylic');
 INSERT INTO composition_item (ci_name) VALUES ('Alpaca');
@@ -145,8 +155,9 @@ INSERT INTO composition_item (ci_name) VALUES ('Viscose');
 INSERT INTO composition_item (ci_name) VALUES ('Viscose (made from bamboo pulp)');
 INSERT INTO composition_item (ci_name) VALUES ('Wool');
 INSERT INTO composition_item (ci_name) VALUES ('Yak');
--- select * from "composition_item";
+-- select * from composition_item;
 
+-- Brand
 INSERT INTO brand (id, brand_name) VALUES (1, 'Betty Barclay');
 INSERT INTO brand (id, brand_name) VALUES (2, 'Vera Mont');
 INSERT INTO brand (id, brand_name) VALUES (3, 'Gil Bret');
@@ -155,9 +166,25 @@ INSERT INTO brand (id, brand_name) VALUES (5, 'So Cossy');
 INSERT INTO brand (id, brand_name) VALUES (6, 'Saint Jacques');
 INSERT INTO brand (id, brand_name) VALUES (7, 'Betty & Co');
 INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
+-- select * from brand;
 
 -- Vendor
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213970', 'GMS Composite Knitting Ind. Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214020', 'Dipta Garments Ltd.');
+-- select * from vendor;
+
+-- Country
+INSERT INTO country (code, "name") VALUES ('BD', 'Bangladesh');
+INSERT INTO country (code, "name") VALUES ('DE', 'Germany');
+-- select * from country;
+
+-- Address
+INSERT INTO address ("name", contact, email, phone, company, address1, city, postcode, country_code) VALUES ('Tanvir', 'Tanvir Ahmed', 't1@ftahmed.me', '0123456789', 'My Company', 'Uttara', 'Dhaka', '1230', 'BD');
+INSERT INTO address ("name", contact, email, phone, company, address1, city, postcode, country_code) VALUES ('Sadat', 'K A Sadat', 's1@ftahmed.me', '0987654321', 'Retech IOT', 'Siddherswari', 'Dhaka', '1200', 'BD');
+-- select * from address;
+
+-- VendorAddress ManyToOne relation
+WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='213970'), a1 AS (SELECT id FROM address WHERE name='Tanvir') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
+-- SELECT vendor_code, vendor_name, "name", contact, company FROM "vendor_addresses", "vendor", "address" WHERE vendor_id=vendor.id AND address_id=address.id;
 
 COMMIT;

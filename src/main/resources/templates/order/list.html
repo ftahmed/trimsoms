@@ -220,6 +220,196 @@
                     </form>
                 </div>
             </div>
+            <!-- confirm order -->
+            <div th:if="${!orders.empty}" class="content">
+                <p class="h5" th:text="#{order.subhead.confirm}">Confirm order</p>
+                <p class="border-top">&nbsp;</p>
+                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                    <div class="row">
+                        <div class="col">
+                            <div class="lead" th:text="#{confirm.invoice.label}">Invoice address</div>
+                            <div class="lead border-top">&nbsp;</div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.company.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.addr1.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.addr2.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.addr3.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.city.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.postcode.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{invoice.country.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="orderby" class="col-md-3 col-form-label">
+                                    <span th:text="#{confirm.orderby.label}" />
+                                </label>
+                                <div class="col">
+                                    <input id="orderby" name="orderby" th:type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="vendorpo" class="col-md-3 col-form-label">
+                                    <span th:text="#{confirm.vendorpo.label}" />
+                                </label>
+                                <div class="col">
+                                    <input id="vendorpo" name="vendorpo" th:type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{confirm.notes.label}" />
+                                </label>
+                                <div class="col">
+                                    <textarea id="notes" name="notes" rows="3" class="form-control" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="lead" th:text="#{delivery.info.label}">All selected orders will be shipped to the selected below address.</div>
+                            <div class="lead border-top">&nbsp;</div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.select.label}" />
+                                </label>
+                                <div class="col">
+                                    <select id="vendoraddr" name="vendoraddr" class="form-select">
+                                        <option value="">Select address</option>
+                                        <option value="A">Tanvir</option>
+                                        <option value="A">Sadat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.contact.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.email.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.phone.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.company.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.addr1.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.addr2.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.addr3.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.city.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.postcode.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label th:for="notes" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.country.label}" />
+                                </label>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" th:value="#{confirm.submit.label}" class="btn btn-primary float-end" />
+                </form>
+            </div>
         </div>
     </body>
 </html>
