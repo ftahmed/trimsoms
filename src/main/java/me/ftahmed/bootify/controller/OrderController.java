@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.domain.Order;
+import me.ftahmed.bootify.domain.PurchaseOrder;
+import me.ftahmed.bootify.domain.Vendor;
+import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.OrderService;
+import me.ftahmed.bootify.service.PartService;
+import me.ftahmed.bootify.service.VendorService;
 import me.ftahmed.bootify.util.ByteUtils;
 import me.ftahmed.bootify.util.WebUtils;
 
@@ -48,15 +54,33 @@ public class OrderController {
 
     @Autowired 
     private OrderService orderService;
+    @Autowired 
+    private PartService partService;
+    @Autowired 
+    private CompositionItemService compositionItemService;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
+        // upload page
         model.addAttribute("productValues", productValues);
-
         model.addAttribute("orderTypeValues", orderTypeValues);
 
+        // list page
         model.addAttribute("pos", List.of());
         model.addAttribute("orders", List.of());
+    }
+
+    @Data
+    public static final class UploadDto {
+
+        @NotNull
+        private String product;
+
+        private String orderType;
+
+        private MultipartFile headerFile;
+
+        private MultipartFile orderFile;
     }
 
     @GetMapping("/order/upload")
@@ -157,31 +181,31 @@ public class OrderController {
         return -1;
     }
 
-    @Data
-    public static final class UploadDto {
-
-        @NotNull
-        private String product;
-
-        private String orderType;
-
-        MultipartFile headerFile;
-
-        MultipartFile orderFile;
-    }
-
     @GetMapping("/order/list")
     public String list(final Model model) {
-        // model.addAttribute("orders", orderService.findAll());
         model.addAttribute("pos", orderService.findAllDistinctPurchaseOrders());
+        // model.addAttribute("orders", orderService.findAll());
         return "order/list";
     }
 
-    @GetMapping("/order/quantity/{poNumber}")
+    @Autowired
+    VendorService verndorService;
+    
+    @GetMapping("/order/manage/{poNumber}")
     public String list(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
-        model.addAttribute("pos", orderService.findDistinctPurchaseOrdersByPoNumber(poNumber));
+        List<PurchaseOrder> pos = orderService.findDistinctPurchaseOrdersByPoNumber(poNumber);
+        model.addAttribute("pos", pos);
         model.addAttribute("orders", orderService.findByPoNumber(poNumber));
-        return "order/list";
+
+        model.addAttribute("parts", partService.findAll());
+        model.addAttribute("cis", compositionItemService.findAll());
+
+        Optional<Vendor> v = verndorService.findByVendorCode(pos.get(0).getVendorId());
+        if (v.isPresent()) {
+            model.addAttribute("vaddrs", v.get().getAddresses());
+        }
+
+        return "order/manage";
     }
 
 }
