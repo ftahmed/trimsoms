@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -192,7 +194,7 @@ public class OrderController {
     VendorService verndorService;
     
     @GetMapping("/order/manage/{poNumber}")
-    public String list(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
+    public String manage(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
         List<PurchaseOrder> pos = orderService.findDistinctPurchaseOrdersByPoNumber(poNumber);
         model.addAttribute("pos", pos);
         model.addAttribute("orders", orderService.findByPoNumber(poNumber));
@@ -206,6 +208,43 @@ public class OrderController {
         }
 
         return "order/manage";
+    }
+
+    @PostMapping("/order/manage/{poNumber}/layoutfile")
+    public String layoutfile(@PathVariable("poNumber") String poNumber, @RequestPart("layoutfile") MultipartFile layoutfile, 
+            final RedirectAttributes attributes, final Model model) {
+
+        if (layoutfile.isEmpty()) {
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.layoutfile.fail") + '!');
+            return "redirect:/order/manage/"+poNumber;
+        }
+
+        // normalize the file path and save in the local file system
+        String fileName = StringUtils.cleanPath(layoutfile.getOriginalFilename());
+        try {
+            Path path = Paths.get(UPLOAD_DIR + fileName);
+            Files.copy(layoutfile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            log.error("Failed to upload file", e);
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.layoutfile.fail") + " " + e.getMessage() + '!');
+            return "redirect:/order/upload";
+        }
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.layoutfile.success") + " " + fileName + '!');
+
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/status")
+    public String layoutfile(@PathVariable("poNumber") String poNumber, @RequestParam("status") String status, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+        
+        return "redirect:/order/manage/"+poNumber;
     }
 
 }

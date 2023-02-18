@@ -45,10 +45,10 @@
             <div th:if="${!orders.empty}" class="content">
                 <p class="h5" th:text="#{order.subhead.manage}">Manage</p>
                 <p class="border-top">&nbsp;</p>
-                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
-                    <div class="row">
-                        <div class="col">
-                            <div class="row mb-3">
+                <div class="row">
+                    <div class="col-md-7">
+                        <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/layoutfile'}" method="post" enctype="multipart/form-data">
+                            <div class="row mb-3">                            
                                 <label th:for="layoutfile" class="col-md-3 col-form-label">
                                     <span th:text="#{manage.layoutfile.label}" />
                                 </label>
@@ -58,9 +58,11 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="button" class="btn btn-primary form-control" th:text="#{manage.layoutfile.button}" title="Upload">Upload</button>
+                                    <button type="submit" class="btn btn-primary form-control" th:text="#{manage.layoutfile.button}" title="Upload">Upload</button>
                                 </div>
                             </div>
+                        </form>
+                        <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/status'}" method="post" >
                             <div class="row mb-3">
                                 <label th:for="status" class="col-md-3 col-form-label">
                                     <span th:text="#{manage.status.label}" />
@@ -71,23 +73,23 @@
                                             <img src="/images/clipboard.png" alt="Status" class="d-inline-block align-top" width="20" height="20">
                                         </span>
                                         <select name="status" id="status" class="form-select">
-                                            <option value="1">New</option>
-                                            <option value="2">On hold</option>
-                                            <option value="3">Cancelled</option>
-                                            <option value="4">Confirmed</option>
-                                            <option value="5">Completed</option>
-                                            <option value="6">Delivered</option>
+                                            <option value="New">New</option>
+                                            <option value="On hold">On hold</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                            <option value="Confirmed">Confirmed</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Delivered">Delivered</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="button" class="btn btn-danger form-control foem" th:text="#{manage.status.button}" title="Change status">Change</button>
+                                    <button type="submit" class="btn btn-danger form-control foem" th:text="#{manage.status.button}" title="Change status">Change</button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">&nbsp;</div>
+                        </form>
                     </div>
-                </form>
+                    <div class="col">&nbsp;</div>
+                </div>
             </div>
             <!-- composition form -->
             <div th:if="${!orders.empty}" class="content">
