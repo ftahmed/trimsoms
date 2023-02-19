@@ -15,9 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +46,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.domain.Order;
-import me.ftahmed.bootify.domain.OrderDetails;
 import me.ftahmed.bootify.domain.PurchaseOrder;
+import me.ftahmed.bootify.domain.PurchaseOrderDetails;
 import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.OrderService;
 import me.ftahmed.bootify.service.PartService;
+import me.ftahmed.bootify.service.PurchaseOrderDetailsService;
 import me.ftahmed.bootify.service.VendorService;
 import me.ftahmed.bootify.util.ByteUtils;
 import me.ftahmed.bootify.util.WebUtils;
@@ -63,6 +67,8 @@ public class OrderController {
     private PartService partService;
     @Autowired 
     private CompositionItemService compositionItemService;
+    @Autowired
+    PurchaseOrderDetailsService podService;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
@@ -174,10 +180,29 @@ public class OrderController {
                 .build()
                 .parse();
 
-            for (Order o : orders) {
-                o.setOrderType(orderType);
-                o.setOrderStatus("New");
-                Long oid = orderService.create(o);
+            Map<String, PurchaseOrderDetails> pods = new HashMap<>();
+            for (Order order : orders) {
+                order.setOrderType(orderType);
+                order.setOrderStatus("New");
+                Long oid = orderService.create(order);
+
+                if (pods.get(order.getPoNumber()) == null) {
+                    PurchaseOrderDetails pod = new PurchaseOrderDetails();
+
+                    pod.setPoNumber(order.getPoNumber());
+                    pod.setStatus(order.getOrderStatus());
+                    pod.setType(order.getOrderType());
+                    pod.setSeason(order.getSeason());
+                    pod.setBrand(order.getBrand());
+                    pod.setArticleNumber(order.getArticleNumber());
+                    pod.setVendorId(order.getVendorId());
+                    pod.setFactoryName1(order.getFactoryName1());
+
+                    pods.put(order.getPoNumber(), pod);
+                }
+            }
+            for (Entry<String, PurchaseOrderDetails> pod : pods.entrySet()) {
+                podService.create(pod.getValue());
             }
             return orders.size();
         } catch (Exception e) {
@@ -205,6 +230,7 @@ public class OrderController {
         model.addAttribute("parts", partService.findAll());
         model.addAttribute("cis", compositionItemService.findAll());
 
+        // TODO: Load from purchase order details
         List<String> cilist = Arrays.asList(
             "part:Lining",
             "ci:Coir:90%",
@@ -243,6 +269,10 @@ public class OrderController {
         }
 
         // TODO: update order status
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setLayoutFile(fileName);
+        pod.setLayoutDate(OffsetDateTime.now());
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.layoutfile.success") + " " + fileName + '!');
@@ -251,10 +281,13 @@ public class OrderController {
     }
 
     @PostMapping("/order/manage/{poNumber}/status")
-    public String layoutfile(@PathVariable() final String poNumber, @RequestParam(required = false) String status, 
+    public String status(@PathVariable() final String poNumber, @RequestParam(required = false) String status, 
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setStatus(status);
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.status.success") + " " + status + '!');
@@ -267,8 +300,9 @@ public class OrderController {
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
-        OrderDetails od = new OrderDetails();
-        od.setCompositions(cilist);
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setCompositions(cilist);
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.composition.success") + " " + cilist + '!');
@@ -281,6 +315,9 @@ public class OrderController {
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setApprovalDate(OffsetDateTime.now());
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.approve.success") + '!');
@@ -293,6 +330,9 @@ public class OrderController {
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setRejectReason(reason);
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.reject.success") + " " + reason + '!');
@@ -329,6 +369,12 @@ public class OrderController {
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        pod.setOrderBy(params.get("orderby"));
+        pod.setVendorPo(params.get("vendorpo"));
+        pod.setPrinterNotes(params.get("notes"));
+        pod.setStatus("Confirmed");
+        podService.update(poNumber, pod);
 
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.confirm.success") + " " + params + '!');
