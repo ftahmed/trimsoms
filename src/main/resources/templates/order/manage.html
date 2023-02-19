@@ -73,6 +73,7 @@
                                             <img src="/images/clipboard.png" alt="Status" class="d-inline-block align-top" width="20" height="20">
                                         </span>
                                         <select name="status" id="status" class="form-select">
+                                            <option value="" th:text="#{select.empty.label}" />
                                             <option value="New">New</option>
                                             <option value="On hold">On hold</option>
                                             <option value="Cancelled">Cancelled</option>
@@ -95,7 +96,7 @@
             <div th:if="${!orders.empty}" class="content">
                 <p class="h5" th:text="#{order.subhead.composition}">Composition list editor</p>
                 <p class="border-top">&nbsp;</p>
-                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                <form id="ciform" th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/composition'}" method="post" >
                     <div class="row">
                         <div class="col">
                             <div class="row mb-3">
@@ -106,9 +107,9 @@
                                     <div class="input-group">
                                         <select id="part" class="form-select">
                                             <option value="" th:text="#{select.empty.label}" />
-                                            <option th:each="part : ${parts}" th:value="${part.id}" th:text="${part.partName}" />
+                                            <option th:each="part : ${parts}" th:value="${part.partName}" th:text="${part.partName}" />
                                         </select>
-                                        <button type="button" class="btn btn-outline-secondary" title="Add Part">&rarr;</button>
+                                        <button type="button" id="addpart" class="btn btn-outline-secondary" title="Add Part">&rarr;</button>
                                     </div>
                                 </div>
                             </div>
@@ -120,12 +121,12 @@
                                     <div class="input-group">
                                         <select id="ci" class="form-select">
                                             <option value="" th:text="#{select.empty.label}" />
-                                            <option th:each="ci : ${cis}" th:value="${ci.id}" th:text="${ci.ciName}" />
+                                            <option th:each="ci : ${cis}" th:value="${ci.ciName}" th:text="${ci.ciName}" />
                                         </select>
                                         <span class="input-group-text">&nbsp;</span>
                                         <input id="pct" name="pct" th:type="text" class="form-control" />
                                         <span class="input-group-text">%</span>
-                                        <button type="button" class="btn btn-outline-secondary" title="Add Fibre">&rarr;</button>
+                                        <button type="button" id="addci" class="btn btn-outline-secondary" title="Add Fibre">&rarr;</button>
                                     </div>
                                 </div>
                             </div>
@@ -136,15 +137,15 @@
                                     <span th:text="#{order.cilist.label}" />
                                 </label>
                                 <div class="col-md-9">
-                                    <select id="cilist" name="cilist" size="5" class="form-select">
-                                        <option></option>
+                                    <select id="cilist" name="cilist" size="5" multiple="" class="form-select">
+                                        <option th:each="ci : ${cilist}" th:value="${ci}" th:text="${#strings.replace(#strings.substringAfter(ci, ':'), ':', ' ')}" />
                                     </select>
                                     <div class="row">
                                         <div class="col input-group">
-                                            <button type="button" class="btn btn-outline-warning" title="Modify">&larr;</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Move Up">&uarr;</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Move Down">&darr;</button>
-                                            <button type="button" class="btn btn-outline-danger" title="Delete">&#10005;</button>
+                                            <!-- <button type="button" value="modify" class="cilist btn btn-outline-warning" title="Modify">&larr;</button> -->
+                                            <button type="button" value="up" class="cilist btn btn-outline-secondary" title="Move Up">&uarr;</button>
+                                            <button type="button" value="down" class="cilist btn btn-outline-secondary" title="Move Down">&darr;</button>
+                                            <button type="button" value="remove" class="cilist btn btn-outline-danger" title="Remove">&#10005;</button>
                                         </div>
                                         <div class="col">
                                             <input type="submit" th:value="#{cilist.submit.label}" class="btn btn-primary float-end" />
@@ -160,41 +161,44 @@
             <div th:if="${!orders.empty}" class="content">
                 <p class="h5" th:text="#{order.subhead.layout}">Layout approval management</p>
                 <p class="border-top">&nbsp;</p>
-                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
                     <div class="row">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <label th:for="layoutfile" class="col-md-3 col-form-label">
-                                    <span th:text="#{layout.approve.label}" />
-                                </label>
-                                <div class="col-md-7">
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <img src="/images/attachment.svg" alt="Layout file" class="d-inline-block align-top" width="20" height="20">
-                                        </span>
-                                        <button type="button" class="btn btn-info form-control" th:text="#{layout.approve.view}">View Layout</button>
+                        <div class="col-md-7">
+                            <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/approve'}" method="post" >
+                                <div class="row mb-3">
+                                    <label th:for="layoutfile" class="col-md-3 col-form-label">
+                                        <span th:text="#{layout.approve.label}" />
+                                    </label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <img src="/images/attachment.svg" alt="Attachment" class="d-inline-block align-top" width="20" height="20">
+                                            </span>
+                                            <button type="button" class="btn btn-info form-control" th:text="#{layout.approve.view}">View Layout</button>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary form-control" th:text="#{layout.approve.button}" title="Approve layout">Approve</button>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary form-control" th:text="#{layout.approve.button}" title="Approve layout">Approve</button>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="layoutfile" class="col-md-3 col-form-label">
-                                    <span th:text="#{layout.reject.label}" />
-                                </label>
-                                <div class="col-md-7">
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <img src="/images/dislike.svg" alt="Layout file" class="d-inline-block align-top" width="20" height="20">
-                                        </span>
-                                        <input id="reject" name="reject" th:type="text" class="form-control" />
+                            </form>
+                            <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/reject'}" method="post" >
+                                <div class="row mb-3">
+                                    <label th:for="layoutfile" class="col-md-3 col-form-label">
+                                        <span th:text="#{layout.reject.label}" />
+                                    </label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <img src="/images/dislike.svg" alt="Reject" class="d-inline-block align-top" width="20" height="20">
+                                            </span>
+                                            <input id="reason" name="reason" th:type="text" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-danger form-control" th:text="#{layout.reject.button}" title="Reject layout">Reject</button>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-danger form-control" th:text="#{layout.reject.button}" title="Reject layout">Reject</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                         <div class="col">&nbsp;</div>
                     </div>
@@ -206,7 +210,7 @@
                 <p th:if="${!orders.empty}" class="border-top">&nbsp;</p>
                 <div th:if="${!pos.empty && orders.empty}" th:text="#{order.list.empty}" />
                 <div th:if="${!orders.empty}" class="table-responsive">
-                    <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
+                    <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/quantities'}" method="post" >
                         <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" />
                         <table class="table table-striped table-hover align-middle">
                             <thead>
@@ -250,7 +254,7 @@
                                     <td>
                                         <div class="float-end text-nowrap">
                                             <div class="col">
-                                                <input type="text" class="form-control is-invalid null " th:id="quantity" th:name="quantity" th:value="${order.quantity}" />
+                                                <input type="text" class="form-control is-invalid" th:id="quantity" th:name="quantity" th:value="${order.quantity}" />
                                                 <div class="invalid-feedback d-block">
                                                     <p class="mb-0">Please provide a value.</p>
                                                 </div>
@@ -267,11 +271,111 @@
             <div th:if="${!orders.empty}" class="content">
                 <p class="h5" th:text="#{order.subhead.confirm}">Confirm order</p>
                 <p class="border-top">&nbsp;</p>
-                <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" >
-                    <div class="row">
-                        <div class="col">
-                            <div class="lead" th:text="#{confirm.invoice.label}">Invoice address</div>
-                            <div class="lead border-top">&nbsp;</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="lead" th:text="#{delivery.info.label}">Delivery address.</div>
+                        <div class="lead border-top">&nbsp;</div>
+                        <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/deladdr'}" method="post">
+                            <div class="row mb-3">
+                                <label th:for="vendoraddr" class="col-md-3 col-form-label">
+                                    <span th:text="#{delivery.select.label}" />
+                                </label>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <select id="vendoraddr" class="form-select">
+                                            <option value="" th:text="#{select.empty.label}" />
+                                            <option th:each="addr : ${vaddrs}" th:value="${addr.name}" th:text="${addr.contact}" />
+                                        </select>
+                                        <input type="submit" th:value="'Load'" class="btn btn-primary float-end" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.contact.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.email.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.phone.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.company.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.addr1.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.addr2.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.addr3.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.city.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.postcode.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label th:for="notes" class="col-md-3 col-form-label">
+                                <span th:text="#{delivery.country.label}" />
+                            </label>
+                            <div class="col">
+                                <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="lead" th:text="#{confirm.invoice.label}">Invoice address</div>
+                        <div class="lead border-top">&nbsp;</div>
+                        <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/confirm'}" method="post" >
                             <div class="row mb-3">
                                 <label th:for="notes" class="col-md-3 col-form-label">
                                     <span th:text="#{invoice.company.label}" />
@@ -352,105 +456,11 @@
                                     <textarea id="notes" name="notes" rows="3" class="form-control" ></textarea>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="lead" th:text="#{delivery.info.label}">All selected orders will be shipped to the selected below address.</div>
-                            <div class="lead border-top">&nbsp;</div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.select.label}" />
-                                </label>
-                                <div class="col">
-                                    <select id="vendoraddr" class="form-select">
-                                        <option value="" th:text="#{select.empty.label}" />
-                                        <option th:each="addr : ${vaddrs}" th:value="${addr.name}" th:text="${addr.contact}" />
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.contact.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.email.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.phone.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.company.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.addr1.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.addr2.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.addr3.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.city.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.postcode.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label th:for="notes" class="col-md-3 col-form-label">
-                                    <span th:text="#{delivery.country.label}" />
-                                </label>
-                                <div class="col">
-                                    <input type="text" class="form-control form-control-plaintext" readonly="readonly" value=""/>
-                                </div>
-                            </div>
-                        </div>
+                            <input type="hidden" name="deladdr" th:value="${'deladdr-name'}"/>
+                            <input type="submit" th:value="#{confirm.submit.label}" class="btn btn-primary float-end" />
+                        </form>
                     </div>
-                    <input type="submit" th:value="#{confirm.submit.label}" class="btn btn-primary float-end" />
-                </form>
+                </div>
             </div>
         </div>
     </body>

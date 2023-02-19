@@ -15,7 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.domain.Order;
+import me.ftahmed.bootify.domain.OrderDetails;
 import me.ftahmed.bootify.domain.PurchaseOrder;
 import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.service.CompositionItemService;
@@ -202,6 +205,15 @@ public class OrderController {
         model.addAttribute("parts", partService.findAll());
         model.addAttribute("cis", compositionItemService.findAll());
 
+        List<String> cilist = Arrays.asList(
+            "part:Lining",
+            "ci:Coir:90%",
+            "ci:Cashgora:10%",
+            "part:Hoodlining",
+            "ci:Badger:100%"
+            );
+        model.addAttribute("cilist", cilist);
+
         Optional<Vendor> v = verndorService.findByVendorCode(pos.get(0).getVendorId());
         if (v.isPresent()) {
             model.addAttribute("vaddrs", v.get().getAddresses());
@@ -211,11 +223,11 @@ public class OrderController {
     }
 
     @PostMapping("/order/manage/{poNumber}/layoutfile")
-    public String layoutfile(@PathVariable("poNumber") String poNumber, @RequestPart("layoutfile") MultipartFile layoutfile, 
+    public String layoutfile(@PathVariable() final String poNumber, @RequestPart() MultipartFile layoutfile, 
             final RedirectAttributes attributes, final Model model) {
 
         if (layoutfile.isEmpty()) {
-            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.layoutfile.fail") + '!');
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("manage.layoutfile.fail") + '!');
             return "redirect:/order/manage/"+poNumber;
         }
 
@@ -226,23 +238,100 @@ public class OrderController {
             Files.copy(layoutfile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("Failed to upload file", e);
-            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.layoutfile.fail") + " " + e.getMessage() + '!');
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("manage.layoutfile.fail") + " " + e.getMessage() + '!');
             return "redirect:/order/upload";
         }
 
         // TODO: update order status
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.layoutfile.success") + " " + fileName + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.layoutfile.success") + " " + fileName + '!');
 
         return "redirect:/order/manage/"+poNumber;
     }
 
     @PostMapping("/order/manage/{poNumber}/status")
-    public String layoutfile(@PathVariable("poNumber") String poNumber, @RequestParam("status") String status, 
+    public String layoutfile(@PathVariable() final String poNumber, @RequestParam(required = false) String status, 
             final RedirectAttributes attributes, final Model model) {
 
         // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.status.success") + " " + status + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/composition")
+    public String composition(@PathVariable() final String poNumber, @RequestParam() List<String> cilist, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+        OrderDetails od = new OrderDetails();
+        od.setCompositions(cilist);
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.composition.success") + " " + cilist + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/approve")
+    public String approve(@PathVariable() final String poNumber,
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.approve.success") + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/reject")
+    public String reject(@PathVariable() final String poNumber, @RequestParam(required = false) String reason, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.reject.success") + " " + reason + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/quantities")
+    public String quantities(@PathVariable() final String poNumber, @RequestParam() List<String> quantity, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.quantities.success") + " " + quantity + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/deladdr")
+    public String deladdr(@PathVariable() final String poNumber, @RequestParam(required = false) String name, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.deladdr.success") + " " + name + '!');
+        
+        return "redirect:/order/manage/"+poNumber;
+    }
+
+    @PostMapping("/order/manage/{poNumber}/confirm")
+    public String confirm(@PathVariable() final String poNumber, @RequestParam() Map<String,String> params, 
+            final RedirectAttributes attributes, final Model model) {
+
+        // TODO: update order status
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.confirm.success") + " " + params + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
