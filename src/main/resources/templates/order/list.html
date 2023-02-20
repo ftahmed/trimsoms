@@ -20,8 +20,9 @@
                             <th th:text="#{order.poNumber.label}" scope="col" />
                             <th th:text="#{order.articleNumber.label}" scope="col" />
                             <th th:text="#{order.orderType.label}" scope="col" />
-                            <th th:text="#{order.vendorId.label}" scope="col" />
+                            <th th:text="#{order.vendorCode.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
+                            <th th:text="#{order.quantityOrig.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
@@ -34,8 +35,9 @@
                             <td th:text="${pod.poNumber}" />
                             <td th:text="${pod.articleNumber}" />
                             <td th:text="${pod.type}" />
-                            <td th:text="${pod.vendorId}" />
+                            <td th:text="${pod.vendorCode}" />
                             <td th:text="${pod.factoryName1}" />
+                            <td th:text="${pod.totalQtyOrig}" />
                             <td th:text="${pod.totalQty}" />
                             <td th:text="${pod.status}"/>
                             <td>

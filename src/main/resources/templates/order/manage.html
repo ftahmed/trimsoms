@@ -20,8 +20,9 @@
                             <th th:text="#{order.poNumber.label}" scope="col" />
                             <th th:text="#{order.articleNumber.label}" scope="col" />
                             <th th:text="#{order.orderType.label}" scope="col" />
-                            <th th:text="#{order.vendorId.label}" scope="col" />
+                            <th th:text="#{order.vendorCode.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
+                            <th th:text="#{order.quantityOrig.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                         </tr>
@@ -33,8 +34,9 @@
                             <td th:text="${pod.poNumber}" />
                             <td th:text="${pod.articleNumber}" />
                             <td th:text="${pod.type}" />
-                            <td th:text="${pod.vendorId}" />
+                            <td th:text="${pod.vendorCode}" />
                             <td th:text="${pod.factoryName1}" />
+                            <td th:text="${pod.totalQtyOrig}" />
                             <td th:text="${pod.totalQty}" />
                             <td th:text="${pod.status}"/>
                         </tr>
@@ -42,7 +44,7 @@
                 </table>
             </div>
             <!-- trims order management form -->
-            <div th:if="${!orders.empty}" class="content">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('TRM')">
                 <p class="h5" th:text="#{order.subhead.manage}">Manage</p>
                 <p class="border-top">&nbsp;</p>
                 <div class="row">
@@ -58,7 +60,7 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-primary form-control" th:text="#{manage.layoutfile.button}" title="Upload">Upload</button>
+                                    <button type="submit" class="btn btn-info form-control" th:text="#{manage.layoutfile.button}" title="Upload">Upload</button>
                                 </div>
                             </div>
                         </form>
@@ -78,6 +80,7 @@
                                             <option value="On hold">On hold</option>
                                             <option value="Layout approved">Layout approved</option>
                                             <option value="Layout rejected">Layout rejected</option>
+                                            <option value="Layout resubmitted">Layout resubmitted</option>
                                             <option value="Cancelled">Cancelled</option>
                                             <option value="Confirmed">Confirmed</option>
                                             <option value="Completed">Completed</option>
@@ -86,7 +89,7 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-danger form-control foem" th:text="#{manage.status.button}" title="Change status">Change</button>
+                                    <button type="submit" class="btn btn-primary form-control foem" th:text="#{manage.status.button}" title="Change status">Change</button>
                                 </div>
                             </div>
                         </form>
@@ -95,7 +98,7 @@
                 </div>
             </div>
             <!-- composition form -->
-            <div th:if="${!orders.empty}" class="content">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
                 <p class="h5" th:text="#{order.subhead.composition}">Composition list editor</p>
                 <p class="border-top">&nbsp;</p>
                 <form id="ciform" th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/composition'}" method="post" >
@@ -160,7 +163,7 @@
                 </form>
             </div>
             <!-- layout form -->
-            <div th:if="${!orders.empty}" class="content">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
                 <p class="h5" th:text="#{order.subhead.layout}">Layout approval management</p>
                 <p class="border-top">&nbsp;</p>
                     <div class="row">
@@ -213,7 +216,7 @@
                 <div th:if="${!pods.empty && orders.empty}" th:text="#{order.list.empty}" />
                 <div th:if="${!orders.empty}" class="table-responsive">
                     <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/quantities'}" method="post" >
-                        <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" />
+                        <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" sec:authorize="!hasRole('VEN')"/>
                         <table class="table table-striped table-hover align-middle">
                             <thead>
                                 <tr>
@@ -225,8 +228,9 @@
                                     <th th:text="${orders[0].sizeHeader4}" scope="col" />
                                     <th th:text="${orders[0].sizeHeader5}" scope="col" />
                                     <th th:text="${orders[0].sizeHeader6}" scope="col" />
+                                    <th th:text="#{order.quantityOrig.label}" scope="col" />
                                     <th th:text="#{order.quantity.label}" scope="col" />
-                                    <th scope="col" style="width: 20%;">
+                                    <th scope="col" style="width: 20%;" sec:authorize="!hasRole('VEN')">
                                         <div class="input-group input-group-sm">
                                             <div class="btn-group" role="group" aria-label="Change quantity">
                                                 <input type="radio" class="btn-check" name="changetype" id="changepct" checked>
@@ -252,8 +256,9 @@
                                     <td th:text="${order.size4}" />
                                     <td th:text="${order.size5}" />
                                     <td th:text="${order.size6}" />
+                                    <td th:text="${order.quantityOrig}" />
                                     <td th:text="${order.quantity}" />
-                                    <td>
+                                    <td sec:authorize="!hasRole('VEN')">
                                         <div class="float-end text-nowrap">
                                             <div class="col">
                                                 <input type="hidden" id="oid" name="oid" th:value="${order.id}" />
@@ -269,7 +274,7 @@
                 </div>
             </div>
             <!-- confirm order -->
-            <div th:if="${!orders.empty}" class="content">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
                 <p class="h5" th:text="#{order.subhead.confirm}">Confirm order</p>
                 <p class="border-top">&nbsp;</p>
                 <div class="row">
@@ -287,7 +292,7 @@
                                             <option value="" th:text="#{select.empty.label}" />
                                             <option th:each="addr : ${vaddrs}" th:value="${addr.name}" th:text="${addr.contact}" th:selected="${addr.name == deladdr.name}" />
                                         </select>
-                                        <input type="submit" th:value="#{delivery.set.label}" class="btn btn-primary float-end" />
+                                        <input type="submit" th:value="#{delivery.set.label}" class="btn btn-info float-end" />
                                     </div>
                                 </div>
                             </div>

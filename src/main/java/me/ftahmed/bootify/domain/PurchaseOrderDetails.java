@@ -38,6 +38,9 @@ public class PurchaseOrderDetails {
 
     @Column
     private Long totalQty;
+
+    @Column
+    private Long totalQtyOrig;
     
     @Column
     private String season;
@@ -55,7 +58,7 @@ public class PurchaseOrderDetails {
     private String factoryName1;
     
     @Column
-    private String vendorId;
+    private String vendorCode;
 
     @Column
     private String layoutFile;

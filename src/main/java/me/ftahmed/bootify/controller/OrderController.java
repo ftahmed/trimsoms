@@ -28,6 +28,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -53,7 +55,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.domain.Address;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrderDetails;
+import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.domain.Vendor;
+import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.OrderService;
 import me.ftahmed.bootify.service.PartService;
@@ -204,12 +208,13 @@ public class OrderController {
                     pod.setSeason(order.getSeason());
                     pod.setBrand(order.getBrand());
                     pod.setArticleNumber(order.getArticleNumber());
-                    pod.setVendorId(order.getVendorId());
+                    pod.setVendorCode(order.getVendorId());
                     pod.setFactoryName1(order.getFactoryName1());
 
                     pods.put(order.getPoNumber(), pod);
                 }
                 pod.setTotalQty(pod.getTotalQty() + order.getQuantity());
+                pod.setTotalQtyOrig(pod.getTotalQty());
             }
             for (Entry<String, PurchaseOrderDetails> pod : pods.entrySet()) {
                 podService.create(pod.getValue());
@@ -221,12 +226,22 @@ public class OrderController {
         return -1;
     }
 
+    @Autowired
+    private UserRepository userRepository;
+    
     @GetMapping("/order/list")
     public String list(final Model model) {
         // TODO: Add filters
-        model.addAttribute("pods", podService.findAll());
-        // model.addAttribute("pos", orderService.findAllDistinctPurchaseOrders());
-        // model.addAttribute("orders", orderService.findAll());
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginUsername = authentication.getName();
+        User user = userRepository.findByUsername(loginUsername).get();
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_VEN"))) {
+            model.addAttribute("pods", podService.findByVendorCode(user.getVendor().getVendorCode()));
+        } else {
+            model.addAttribute("pods", podService.findAll());
+        }
+        
         return "order/list";
     }
 
@@ -247,7 +262,7 @@ public class OrderController {
         model.addAttribute("deladdr", new Address());
         model.addAttribute("invaddr", new Address());
 
-        Optional<Vendor> v = verndorService.findByVendorCode(pod.getVendorId());
+        Optional<Vendor> v = verndorService.findByVendorCode(pod.getVendorCode());
         if (v.isPresent()) {
             model.addAttribute("vaddrs", v.get().getAddresses());
             for (Address addr: v.get().getAddresses()) {
@@ -313,7 +328,7 @@ public class OrderController {
         podService.update(poNumber, pod);
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.status.success") + " " + status + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.status.success") + ": " + status + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
@@ -328,7 +343,7 @@ public class OrderController {
         podService.update(poNumber, pod);
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.composition.success") + " " + cilist + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.composition.success") + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
@@ -383,7 +398,7 @@ public class OrderController {
         podService.update(poNumber, pod);
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("manage.reject.success") + " " + reason + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("manage.reject.success") + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
@@ -403,14 +418,14 @@ public class OrderController {
                 o.setQuantity(nq);
                 orderService.update(o);
                 pod.setTotalQty(pod.getTotalQty() - oq + nq);
+                podService.update(poNumber, pod);
             }
-            podService.update(poNumber, pod);
         } catch (Exception e) {
             log.error("Unable to update quantities", e);
         }
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.quantities.success") + " " + nqty + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.quantities.success") + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
@@ -425,7 +440,7 @@ public class OrderController {
         podService.update(poNumber, pod);
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.deladdr.success") + " " + deladdr + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.deladdr.success") + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }
@@ -443,7 +458,7 @@ public class OrderController {
         podService.update(poNumber, pod);
 
         // return success response
-        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.confirm.success") + " " + params + '!');
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.confirm.success") + '!');
         
         return "redirect:/order/manage/"+poNumber;
     }

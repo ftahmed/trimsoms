@@ -47,4 +47,6 @@ public class UserDto {
 
     private List<Long> roles;
 
+    private String vendor;
+
 }

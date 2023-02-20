@@ -34,7 +34,7 @@ public class Address {
     @Column(nullable = false)
     private String contact;
     
-    @Column(nullable = false)
+    @Column
     private String email;
 
     @Column(nullable = false)

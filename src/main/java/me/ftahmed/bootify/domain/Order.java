@@ -41,6 +41,7 @@ public class Order {
     @Transient @CsvBindByName(column = "druckdatum") private String printDateStr;
     @Column(name="druckdatum") @CsvIgnore private LocalDateTime printDate;
     @Column(name="druckmenge") @CsvBindByName(column = "druckmenge") private Long quantity;
+    @Column(name="druckmengeOrig") @CsvIgnore private Long quantityOrig;
     @Column(name="pagr") @CsvBindByName(column = "pagr") private String size;
     @Column(name="pakokey") @CsvBindByName(column = "pakokey") private String key;
     @Column(name="pakokeyFirma") @CsvBindByName(column = "pakokey_firma") private String company;
@@ -119,6 +120,11 @@ public class Order {
         // This method can parse the dateString and set date object as well
         this.printDateStr = dateString;
         setPrintDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+        setQuantityOrig(quantity);
     }
 
     @CreatedDate

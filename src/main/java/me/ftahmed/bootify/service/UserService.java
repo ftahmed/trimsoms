@@ -1,34 +1,37 @@
 package me.ftahmed.bootify.service;
 
-import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 import me.ftahmed.bootify.domain.Role;
 import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.model.UserDto;
 import me.ftahmed.bootify.repos.RoleRepository;
 import me.ftahmed.bootify.repos.UserRepository;
+import me.ftahmed.bootify.repos.VendorRepository;
 import me.ftahmed.bootify.util.NotFoundException;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 
 @Transactional
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private VendorRepository vendorRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public UserService(final UserRepository userRepository, final RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public List<UserDto> findAll() {
         final List<User> users = userRepository.findAll(Sort.by("id"));
@@ -74,6 +77,7 @@ public class UserService {
         userDto.setRoles(user.getRoles() == null ? null : user.getRoles().stream()
                 .map(Role::getId)
                 .collect(Collectors.toList()));
+        userDto.setVendor(user.getVendor() == null ? "" : user.getVendor().getVendorCode());
         return userDto;
     }
 
@@ -94,6 +98,7 @@ public class UserService {
             throw new NotFoundException("one of user roles not found");
         }
         user.setRoles(userRoles.stream().collect(Collectors.toSet()));
+        user.setVendor(vendorRepository.findByVendorCode(userDto.getVendor()).orElse(null));
         return user;
     }
 

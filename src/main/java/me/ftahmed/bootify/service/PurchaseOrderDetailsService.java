@@ -22,6 +22,10 @@ public class PurchaseOrderDetailsService {
         return podRepository.findAll();
     }
 
+    public List<PurchaseOrderDetails> findByVendorCode(final String vendorCode) {
+        return podRepository.findByVendorCode(vendorCode);
+    }
+
     public PurchaseOrderDetails findByPoNumber(final String poNumber) {
         return podRepository.findByPoNumber(poNumber);
     }

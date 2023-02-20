@@ -20,7 +20,7 @@
                 <input th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
                         th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass} + ' ' + ${readonly == 'true' ? 'form-control-plaintext' : ''}" class="form-control" th:readonly="${readonly == 'true'}"/>
                 <input th:if="${type == 'file'}"
-                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass} + ' ' + ${readonly == 'true' ? 'form-control-plaintext' : ''}" class="form-control-file" />
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass} + ' ' + ${readonly == 'true' ? 'form-control-plaintext' : ''}" class="form-control-file form-control" />
                 <textarea th:if="${type == 'textarea'}" th:field="*{__${field}__}"
                         th:classappend="${#fields.hasErrors(field) || #fields.hasErrors(field + '.*') ? 'is-invalid' : ''} + ' ' + ${inputClass}" class="form-control" />
                 <select th:if="${type == 'select' || type == 'multiselect'}" th:field="*{__${field}__}"
