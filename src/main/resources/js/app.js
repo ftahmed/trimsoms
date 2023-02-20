@@ -102,6 +102,35 @@ $("button.cilist").click(function(){
     }
 });
 
+$("button#viewlayout").click(function(){
+    window.open(window.location + '/viewlayout')
+});
+
+$("button#qset").click(function(){
+    $("input#nqty").each(function() { 
+        console.log('nqty before: ' + $(this).val());
+
+        var thisval = parseInt($(this).val());
+        var changeval = parseInt($("input#changeval").val(), 10);
+        if (!isNaN(thisval) && !isNaN(changeval)) {
+            if ($("input#changepct").val() == 'on') {
+                $(this).val(Math.round(thisval * (1 + changeval/100)));
+            } else if ($("input#changeqty").val() == 'on') {
+                $(this).val(thisval + changeval);
+            }
+        }
+        
+        console.log('nqty after: ' + $(this).val());
+    });
+});
+
+$("button#qreset").click(function(){
+    $("input#oqty").each(function() { 
+        console.log('oqty: ' + $(this).val() + ', nqty: ' + $(this).siblings('input#nqty').val()); 
+        $(this).siblings('input#nqty').val($(this).val());
+    });
+});
+
 $("form#ciform").on("submit", function() {
     $("select#cilist option").each(function() { 
             console.log($(this).val() + ' -> ' + $(this).text()); 

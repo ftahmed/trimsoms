@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import me.ftahmed.bootify.domain.Order;
-import me.ftahmed.bootify.domain.PurchaseOrder;
 import me.ftahmed.bootify.repos.OrderRepository;
 
 
@@ -23,24 +22,23 @@ public class OrderService {
         return orderRepository.findAll(Sort.by("id"));
     }
 
+    public Order findById(String id) {
+        return orderRepository.findById(id);
+    }
+
     public List<Order> findByBrandAndSeason(String brand, String season) {
-        return orderRepository.findByBrandAndSeason(brand, season);
+        return orderRepository.findByBrandAndSeasonOrderById(brand, season);
     }
 
     public List<Order> findByPoNumber(String poNumber) {
-        return orderRepository.findByPoNumber(poNumber);
-    }
-
-    public List<PurchaseOrder> findAllDistinctPurchaseOrders() {
-        return orderRepository.findAllDistinctPurchaseOrders();
-    }
-
-    public List<PurchaseOrder> findDistinctPurchaseOrdersByPoNumber(String poNumber) {
-        return orderRepository.findDistinctPurchaseOrdersByPoNumber(poNumber);
+        return orderRepository.findByPoNumberOrderById(poNumber);
     }
 
     public Long create(final Order order) {
         return orderRepository.save(order).getId();
     }
 
+    public void update(final Order order) {
+        orderRepository.save(order);
+    }
 }

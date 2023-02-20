@@ -1,5 +1,7 @@
 package me.ftahmed.bootify.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import me.ftahmed.bootify.domain.PurchaseOrderDetails;
@@ -14,6 +16,10 @@ public class PurchaseOrderDetailsService {
 
     public PurchaseOrderDetailsService(final PurchaseOrderDetailsRepository podRepository) {
         this.podRepository = podRepository;
+    }
+
+    public List<PurchaseOrderDetails> findAll() {
+        return podRepository.findAll();
     }
 
     public PurchaseOrderDetails findByPoNumber(final String poNumber) {
