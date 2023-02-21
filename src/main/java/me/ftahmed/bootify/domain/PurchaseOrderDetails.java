@@ -61,7 +61,16 @@ public class PurchaseOrderDetails {
     private String vendorCode;
 
     @Column
+    private String orderFile;
+
+    @Column
+    private String orderOriginalFile;
+
+    @Column
     private String layoutFile;
+
+    @Column
+    private String layoutOriginalFile;
 
     @Column
     private OffsetDateTime layoutDate;

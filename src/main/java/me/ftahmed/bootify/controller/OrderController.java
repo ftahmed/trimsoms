@@ -150,26 +150,28 @@ public class OrderController {
         MultipartFile orderFile = uploadDto.getOrderFile();
         if (orderFile != null && !orderFile.isEmpty()) {
             // normalize the file path and save in the local file system
-            String fileName = StringUtils.cleanPath(orderFile.getOriginalFilename());
+            String originalFileName = StringUtils.cleanPath(orderFile.getOriginalFilename());
             try {
-                Path path = Paths.get(UPLOAD_DIR + fileName);
+                Path path = Files.createTempFile(Paths.get(UPLOAD_DIR), "ORDER-", ".CSV");
+                // Path path = Paths.get(UPLOAD_DIR + originalFileName);
                 Files.copy(orderFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+                uploadOrders(path.getFileName().toString(), originalFileName, uploadDto.orderType);
+
             } catch (IOException e) {
                 log.error("Failed to upload file", e);
                 attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + " " + e.getMessage() + '!');
                 return "redirect:/order/upload";
             }
 
-            uploadOrders(fileName, uploadDto.orderType);
-
             // return success response
-            attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + fileName + '!');
+            attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + originalFileName + '!');
         }
 
         return "redirect:/order/list";
     }
 
-    private int uploadOrders(String fileName, String orderType) {
+    private int uploadOrders(String fileName, String originalFileName, String orderType) {
         Charset cs = StandardCharsets.UTF_8;
         try (FileInputStream fis = new FileInputStream(UPLOAD_DIR + fileName)) {
             cs = ByteUtils.detectEncoding(fis);
@@ -210,6 +212,9 @@ public class OrderController {
                     pod.setArticleNumber(order.getArticleNumber());
                     pod.setVendorCode(order.getVendorId());
                     pod.setFactoryName1(order.getFactoryName1());
+
+                    pod.setOrderFile(fileName);
+                    pod.setOrderOriginalFile(originalFileName);
 
                     pods.put(order.getPoNumber(), pod);
                 }
@@ -285,11 +290,17 @@ public class OrderController {
             return "redirect:/order/manage/"+poNumber;
         }
 
+        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
+        
         // normalize the file path and save in the local file system
         String fileName = StringUtils.cleanPath(layoutfile.getOriginalFilename());
+        pod.setLayoutOriginalFile(fileName);
+
         try {
-            Path path = Paths.get(UPLOAD_DIR + fileName);
+            Path path = Files.createTempFile(Paths.get(UPLOAD_DIR), "LAYOUT-" + poNumber + "-", ".PDF");
+            // Path path = Paths.get(UPLOAD_DIR + fileName);
             Files.copy(layoutfile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            pod.setLayoutFile(path.getFileName().toString());
         } catch (IOException e) {
             log.error("Failed to upload file", e);
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("manage.layoutfile.fail") + " " + e.getMessage() + '!');
@@ -297,8 +308,6 @@ public class OrderController {
         }
 
         // TODO: update order status
-        PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
-        pod.setLayoutFile(fileName);
         if (pod.getLayoutDate() != null) {
             pod.setStatus("Layout resubmitted");
             pod.setRejectReason("");
