@@ -1,4 +1,5 @@
 spring:
+  profiles.active: dev
   # sql.init.mode: always
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/mydb}
@@ -8,15 +9,12 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
       validation-timeout: 250
-    
   jpa:
     show-sql: true
     open-in-view: false
     defer-datasource-initialization: true
     hibernate:
-      # ddl-auto: validate
       ddl-auto: update
-      # ddl-auto: create
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate.format_sql: true
@@ -29,8 +27,26 @@ spring:
       date: yyyy-MM-dd
       date-time: yyyy-MM-dd'T'HH:mm:ss
       time: HH:mm:ss
+springdoc:
+  pathsToMatch: /api/**
+logging.level:
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type: TRACE
+  org.hibernate: ERROR
+  org.springframework.web: DEBUG
+
+---
+
+spring:
+  config.activate.on-profile: dev
+  jpa:
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
   web:
-    # Static resources reloading during development
+    # static resources reloading during development
     # resources.static-locations=${project.base-dir}/src/main/resources/static/
     resources.cache.period: 0
   servlet.multipart:
@@ -41,11 +57,33 @@ spring:
   thymeleaf:
     # prefix: ${project.base-dir}/src/main/resources/templates/
     cache: false
-  devtools.livereload.enabled: false
-springdoc:
-  pathsToMatch: /api/**
-logging.level:
-  org.hibernate.SQL: DEBUG
-  org.hibernate.type: TRACE
-  org.hibernate: ERROR
-  org.springframework.web: DEBUG
+  devtools.livereload.enabled: true
+
+---
+
+spring:
+  config.activate.on-profile: prod
+  main:
+    banner-mode: "off"
+  server.port: 8090
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/omsdb}
+    username: ${JDBC_DATABASE_USERNAME:omsuser}
+    password: ${JDBC_DATABASE_PASSWORD:0msUs3r%123}
+  jpa:
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: validate
+  web:
+    # resources.static-locations=${project.base-dir}/src/main/resources/static/
+    resources.cache.period: 300
+  servlet.multipart:
+    # default 1MB
+    max-file-size: 2MB
+    # default 10MB
+    max-request-size: 20MB
+  thymeleaf:
+    # prefix: ${project.base-dir}/src/main/resources/templates/
+    cache: true

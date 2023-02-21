@@ -8,6 +8,14 @@
 create database mydb owner myuser;
 \c mydb 
 
+-- production
+
+postgres=# create user omsuser with createdb encrypted password '0msUs3r%123';
+postgres=# create database omsdb with owner omsuser;
+
+
+-- scratchpad
+
 INSERT INTO public."user" (username, first_name, last_name, dob, email, phone_number, password) 
   VALUES ('u1', 'User1', 'Ahmed', '2000-01-01', 'u1@ftahmed.me', '0123456789', '$2a$08$zO3pHtw.LFU6w18PAoOStu0tRuztdDeX7l2qyfsII.JyogbxKIw9a');
 INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('u1', 'User1', 'Ahmed', '2000-01-01', 'u1@ftahmed.me', '0123456789', '');
