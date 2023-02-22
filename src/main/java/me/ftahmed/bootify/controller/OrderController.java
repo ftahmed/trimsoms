@@ -52,6 +52,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import me.ftahmed.bootify.config.Constants;
 import me.ftahmed.bootify.domain.Address;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrderDetails;
@@ -255,8 +256,9 @@ public class OrderController {
     
     @GetMapping("/order/manage/{poNumber}")
     public String manage(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
+        model.addAttribute("orderStatusValues", Constants.orderStatusValues);
+
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
-        // model.addAttribute("pod", List.of(pod));
         model.addAttribute("pods", List.of(pod));
         model.addAttribute("cilist", pod.getCompositions());
         model.addAttribute("orders", orderService.findByPoNumber(poNumber));
@@ -349,6 +351,7 @@ public class OrderController {
         // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setCompositions(cilist);
+        pod.setStatus("Composition updated");
         podService.update(poNumber, pod);
 
         // return success response

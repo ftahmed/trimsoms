@@ -3,24 +3,30 @@ CREATE extension pgcrypto;
 BEGIN;
 
 -- User
-INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('a1', 'Admin1', 'User', '2000-01-01', 'a1@trims.co', '0123456780', '');
+
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('a1', 'GMS', 'Admin', '2000-01-01', 'a1@gmstrims.co', '0123456780', '');
 WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passa1', (TABLE salt)) WHERE username = 'a1';
-INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('t1', 'Trims1', 'User', '2000-01-01', 't1@trims.co', '0123456789', '');
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('t1', 'GMS', 'Trims', '2000-01-01', 't1@gmstrims.co', '0123456789', '');
 WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passt1', (TABLE salt)) WHERE username = 't1';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v1', 'Vendor1', 'User', '2000-02-02', 'v1@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv1', (TABLE salt)) WHERE username = 'v1';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v2', 'Vendor2', 'User', '2000-02-02', 'v2@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv2', (TABLE salt)) WHERE username = 'v2';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v3', 'Vendor3', 'User', '2000-02-02', 'v3@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv3', (TABLE salt)) WHERE username = 'v3';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v4', 'Vendor4', 'User', '2000-02-02', 'v4@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv4', (TABLE salt)) WHERE username = 'v4';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v5', 'Vendor5', 'User', '2000-02-02', 'v5@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv5', (TABLE salt)) WHERE username = 'v5';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v6', 'Vendor6', 'User', '2000-02-02', 'v6@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv6', (TABLE salt)) WHERE username = 'v6';
-INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('v7', 'Vendor7', 'User', '2000-02-02', 'v7@trims.co', '');
-WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv7', (TABLE salt)) WHERE username = 'v7';
+
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('gmsadmin', 'GMS', 'Admin', '2000-01-01', 'gmsadmin@gmstrims.co', '0123456780', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passa1', (TABLE salt)) WHERE username = 'gmsadmin';
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('gmstrims', 'GMS', 'Trims', '2000-01-01', 'gmstrims@gmstrims.co', '0123456789', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passt1', (TABLE salt)) WHERE username = 'gmstrims';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('saadatia', 'Saadatia', 'User', '2000-02-02', 'saadatia@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass214204', (TABLE salt)) WHERE username = 'saadatia';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('mascot', 'Mascot', 'User', '2000-02-02', 'mascot@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass214060', (TABLE salt)) WHERE username = 'mascot';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('floreal', 'Floreal', 'User', '2000-02-02', 'floreal@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass213535', (TABLE salt)) WHERE username = 'floreal';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('gmsc', 'GMS Composite', 'User', '2000-02-02', 'gmsc@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass213970', (TABLE salt)) WHERE username = 'gmsc';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('metro', 'Metro', 'User', '2000-02-02', 'metro@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass214088', (TABLE salt)) WHERE username = 'metro';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('aman', 'Aman Tex', 'User', '2000-02-02', 'aman@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass213764', (TABLE salt)) WHERE username = 'aman';
+INSERT INTO "user" (username, first_name, last_name, dob, email, password) VALUES ('gmst', 'GMS Textiles', 'User', '2000-02-02', 'gmst@gmstrims.co', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('pass214240', (TABLE salt)) WHERE username = 'gmst';
 -- select * from "user";
 
 -- Role
@@ -32,13 +38,16 @@ INSERT INTO role (role_name) VALUES ('ADMIN');
 -- UserRole ManyToMany relation
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='a1'), (SELECT id FROM role WHERE role_name='ADMIN'));
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='t1'), (SELECT id FROM role WHERE role_name='TRM'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v1'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v2'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v3'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v4'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v5'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v6'), (SELECT id FROM role WHERE role_name='VEN'));
-INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v7'), (SELECT id FROM role WHERE role_name='VEN'));
+
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmsadmin'), (SELECT id FROM role WHERE role_name='ADMIN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmstrims'), (SELECT id FROM role WHERE role_name='TRM'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='saadatia'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='mascot'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='floreal'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmsc'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='metro'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='aman'), (SELECT id FROM role WHERE role_name='VEN'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmst'), (SELECT id FROM role WHERE role_name='VEN'));
 -- SELECT username, first_name, role_name FROM "user_role", "user", "role" WHERE user_id="user".id AND role_id="role".id;
 
 -- Part
@@ -185,23 +194,22 @@ INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
 -- select * from brand;
 
 -- Vendor
-INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213970', 'GMS Composite Knitting Ind Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214204', 'Saadatia Sweaters Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214060', 'Mascot Ltd. DMCC');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213535', 'Floreal International Ltd.');
+INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213970', 'GMS Composite Knitting Ind Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214088', 'Metro Knitting & Dyeing Mills Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213764', 'Aman Tex Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214240', 'GMS Textiles Ltd.');
 
 -- select * from vendor;
-
-UPDATE "user" SET vendor_vendor_code = '213970' WHERE username = 'v1';
-UPDATE "user" SET vendor_vendor_code = '214204' WHERE username = 'v2';
-UPDATE "user" SET vendor_vendor_code = '214060' WHERE username = 'v3';
-UPDATE "user" SET vendor_vendor_code = '213535' WHERE username = 'v4';
-UPDATE "user" SET vendor_vendor_code = '214088' WHERE username = 'v5';
-UPDATE "user" SET vendor_vendor_code = '213764' WHERE username = 'v6';
-UPDATE "user" SET vendor_vendor_code = '214240' WHERE username = 'v7';
+UPDATE "user" SET vendor_vendor_code = '214204' WHERE username = 'saadatia';
+UPDATE "user" SET vendor_vendor_code = '214060' WHERE username = 'mascot';
+UPDATE "user" SET vendor_vendor_code = '213535' WHERE username = 'floreal';
+UPDATE "user" SET vendor_vendor_code = '213970' WHERE username = 'gmsc';
+UPDATE "user" SET vendor_vendor_code = '214088' WHERE username = 'metro';
+UPDATE "user" SET vendor_vendor_code = '213764' WHERE username = 'aman';
+UPDATE "user" SET vendor_vendor_code = '214240' WHERE username = 'gmst';
 
 -- Country
 INSERT INTO country (code, "name") VALUES ('BD', 'Bangladesh');
@@ -209,30 +217,30 @@ INSERT INTO country (code, "name") VALUES ('DE', 'Germany');
 -- select * from country;
 
 -- Address
-INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Sardaganj', 'Kashimpur', '', 'Gazipur', 'GMS Composite Knitting Ind Ltd.', 'Default', '213970', '8801938912050', '1346', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Diakhali,  Molla Bazar', ' Ashulia', 'Savar', 'Dhaka', 'Saadatia Sweaters Ltd.', 'Default', '214204', '8801958620904', '', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('146 Zirabo', 'Dewan Idris Road', 'Ashulia', 'Dhaka', 'Mascot Ltd. DMCC', 'Default', '214060', '880248953238', '', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Road # 5, House # 343', ' DOHS', 'Baridhara DOHS', 'Dhaka', 'Floreal International Ltd.', 'Default', '213535', '8801713060648', '', 'BD');
+INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Sardaganj', 'Kashimpur', '', 'Gazipur', 'GMS Composite Knitting Ind Ltd.', 'Default', '213970', '8801938912050', '1346', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Ramarbag', 'Kutubpur', 'Fatullah', 'Narayangonj', 'Metro Knitting & Dyeing Mills Ltd.', 'Default', '214088', '88028833753', '1400', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Boiragirchala', 'Sreepur', '', 'Gazipur', 'Aman Tex Ltd.', 'Default', '213764', '88027911016', '', 'BD');
 INSERT INTO address (address1, address2, address3, city, company, contact, name, phone, postcode, country_code) VALUES ('Tansutrapur', 'Kaliakoir', '', 'Gazipur', 'GMS Textiles Ltd.', 'Default', '214240', '880277889313', '1750', 'BD');
 -- select * from address;
 
 -- VendorAddress ManyToOne relation
-WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='213970'), a1 AS (SELECT id FROM address WHERE name='213970') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='214204'), a1 AS (SELECT id FROM address WHERE name='214204') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='214060'), a1 AS (SELECT id FROM address WHERE name='214060') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='213535'), a1 AS (SELECT id FROM address WHERE name='213535') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
+WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='213970'), a1 AS (SELECT id FROM address WHERE name='213970') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='214088'), a1 AS (SELECT id FROM address WHERE name='214088') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='213764'), a1 AS (SELECT id FROM address WHERE name='213764') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 WITH v1 AS (SELECT id FROM vendor WHERE vendor_code='214240'), a1 AS (SELECT id FROM address WHERE name='214240') INSERT INTO vendor_addresses (vendor_id, address_id) select (table v1), (table a1);
 -- SELECT vendor_code, vendor_name, "name", contact, company FROM "vendor_addresses", "vendor", "address" WHERE vendor_id=vendor.id AND address_id=address.id;
 
 -- Invoice address
-WITH a1 AS (SELECT id FROM address WHERE name='213970') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='213970';
 WITH a1 AS (SELECT id FROM address WHERE name='214204') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='214204';
 WITH a1 AS (SELECT id FROM address WHERE name='214060') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='214060';
 WITH a1 AS (SELECT id FROM address WHERE name='213535') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='213535';
+WITH a1 AS (SELECT id FROM address WHERE name='213970') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='213970';
 WITH a1 AS (SELECT id FROM address WHERE name='214088') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='214088';
 WITH a1 AS (SELECT id FROM address WHERE name='213764') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='213764';
 WITH a1 AS (SELECT id FROM address WHERE name='214240') UPDATE vendor SET invoice_address_id = (table a1) WHERE vendor_code='214240';

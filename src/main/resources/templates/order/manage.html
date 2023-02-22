@@ -23,6 +23,7 @@
                             <th th:text="#{order.vendorCode.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
                             <th th:text="#{order.quantityOrig.label}" scope="col" />
+                            <th th:text="#{order.quantityAdd.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                         </tr>
@@ -37,6 +38,7 @@
                             <td th:text="${pod.vendorCode}" />
                             <td th:text="${pod.factoryName1}" />
                             <td th:text="${pod.totalQtyOrig}" />
+                            <td th:text="${pod.totalQty-pod.totalQtyOrig}" />
                             <td th:text="${pod.totalQty}" />
                             <td th:text="${pod.status}"/>
                         </tr>
@@ -44,7 +46,7 @@
                 </table>
             </div>
             <!-- trims order management form -->
-            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('TRM')">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
                 <p class="h5" th:text="#{order.subhead.manage}">Manage</p>
                 <p class="border-top">&nbsp;</p>
                 <div class="row">
@@ -76,15 +78,7 @@
                                         </span>
                                         <select name="status" id="status" class="form-select">
                                             <option value="" th:text="#{select.empty.label}" />
-                                            <option value="New">New</option>
-                                            <option value="On hold">On hold</option>
-                                            <option value="Layout approved">Layout approved</option>
-                                            <option value="Layout rejected">Layout rejected</option>
-                                            <option value="Layout resubmitted">Layout resubmitted</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                            <option value="Confirmed">Confirmed</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Delivered">Delivered</option>
+                                            <option th:each="status : ${orderStatusValues}" th:value="${status}" th:text="${status}" />
                                         </select>
                                     </div>
                                 </div>
@@ -98,7 +92,7 @@
                 </div>
             </div>
             <!-- composition form -->
-            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('TRM')">
                 <p class="h5" th:text="#{order.subhead.composition}">Composition list editor</p>
                 <p class="border-top">&nbsp;</p>
                 <form id="ciform" th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/composition'}" method="post" >
@@ -163,7 +157,7 @@
                 </form>
             </div>
             <!-- layout form -->
-            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('TRM')">
                 <p class="h5" th:text="#{order.subhead.layout}">Layout approval management</p>
                 <p class="border-top">&nbsp;</p>
                     <div class="row">
@@ -216,7 +210,7 @@
                 <div th:if="${!pods.empty && orders.empty}" th:text="#{order.list.empty}" />
                 <div th:if="${!orders.empty}" class="table-responsive">
                     <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/quantities'}" method="post" >
-                        <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" sec:authorize="!hasRole('VEN')"/>
+                        <input type="submit" th:value="#{quantity.submit.label}" class="btn btn-primary float-end" sec:authorize="!hasRole('TRM')"/>
                         <table class="table table-striped table-hover align-middle">
                             <thead>
                                 <tr>
@@ -229,8 +223,9 @@
                                     <th th:text="${orders[0].sizeHeader5}" scope="col" />
                                     <th th:text="${orders[0].sizeHeader6}" scope="col" />
                                     <th th:text="#{order.quantityOrig.label}" scope="col" />
+                                    <th th:text="#{order.quantityAdd.label}" scope="col" />
                                     <th th:text="#{order.quantity.label}" scope="col" />
-                                    <th scope="col" style="width: 20%;" sec:authorize="!hasRole('VEN')">
+                                    <th scope="col" style="width: 20%;" sec:authorize="!hasRole('TRM')">
                                         <div class="input-group input-group-sm">
                                             <div class="btn-group" role="group" aria-label="Change quantity">
                                                 <input type="radio" class="btn-check" name="changetype" id="changepct" checked>
@@ -257,8 +252,9 @@
                                     <td th:text="${order.size5}" />
                                     <td th:text="${order.size6}" />
                                     <td th:text="${order.quantityOrig}" />
+                                    <td th:text="${order.quantity-order.quantityOrig}" />
                                     <td th:text="${order.quantity}" />
-                                    <td sec:authorize="!hasRole('VEN')">
+                                    <td sec:authorize="!hasRole('TRM')">
                                         <div class="float-end text-nowrap">
                                             <div class="col">
                                                 <input type="hidden" id="oid" name="oid" th:value="${order.id}" />
@@ -274,7 +270,7 @@
                 </div>
             </div>
             <!-- confirm order -->
-            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('VEN')">
+            <div th:if="${!orders.empty}" class="content" sec:authorize="!hasRole('TRM')">
                 <p class="h5" th:text="#{order.subhead.confirm}">Confirm order</p>
                 <p class="border-top">&nbsp;</p>
                 <div class="row">

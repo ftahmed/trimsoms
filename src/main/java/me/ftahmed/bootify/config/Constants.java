@@ -1,5 +1,7 @@
 package me.ftahmed.bootify.config;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public interface Constants {
@@ -19,11 +21,16 @@ public interface Constants {
         "BULK", "BULK"
     );
 
-    public static final Map<String, String> orderStatusValues = Map.of(
-        "New", "New", 
-        "Confirmed", "Confirmed", 
-        "Completed", "Completed", 
-        "Canceled", "Canceled", 
-        "All", "All"
+    public static final List<String> orderStatusValues = Arrays.asList(
+        "New",
+        "On hold",
+        "Composition updated",
+        "Layout approved",
+        "Layout rejected",
+        "Layout resubmitted",
+        "Cancelled",
+        "Confirmed",
+        "Completed",
+        "Delivered"
     );
 }

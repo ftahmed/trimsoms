@@ -9,9 +9,9 @@
         <relativePath /><!-- lookup parent from repository -->
     </parent>
     <groupId>me.ftahmed</groupId>
-    <artifactId>bootify</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bootify</name>
+    <artifactId>trimsoms</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+    <name>Trims OMS</name>
 
     <properties>
         <java.version>17</java.version>
