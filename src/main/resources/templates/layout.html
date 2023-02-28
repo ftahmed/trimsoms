@@ -36,7 +36,10 @@
                                 </div>
                             </li>
                             <li class="navbar-item" sec:authorize="hasAnyRole('TRM', 'ADMIN')">
-                                <a th:href="@{/order/upload}" th:text="#{upload.page.headline}" class="nav-link" />
+                                <a th:href="@{/order/upload/carelabel}" th:text="#{upload.page.carelabel}" class="nav-link" />
+                            </li>
+                            <li class="navbar-item" sec:authorize="hasAnyRole('TRM', 'ADMIN')">
+                                <a th:href="@{/order/upload/hangtag}" th:text="#{upload.page.hangtag}" class="nav-link" />
                             </li>
                             <li class="navbar-item" sec:authorize="isAuthenticated()">
                                 <a th:href="@{/order/list}" th:text="#{orders.page.headline}" class="nav-link" />

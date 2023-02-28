@@ -34,6 +34,10 @@ public class PurchaseOrderDetailsService {
         return podRepository.existsByPoNumber(poNumber);
     }
 
+    public boolean orderOriginalFileExists(final String orderOriginalFile) {
+        return podRepository.existsByOrderOriginalFile(orderOriginalFile);
+    }
+
     public Long create(final PurchaseOrderDetails pod) {
         return podRepository.save(pod).getId();
     }

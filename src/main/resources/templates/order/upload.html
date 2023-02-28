@@ -2,19 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
     <head>
-        <title th:text="#{upload.page.headline}" />
+        <title th:text="#{upload.page.headline}+${' '+product}" />
     </head>
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 th:text="#{upload.page.headline}" class="flex-grow-1" />
+                <h1 th:text="#{upload.page.headline}+${' '+product}" class="flex-grow-1" />
             </div>
             <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI}" method="post" enctype="multipart/form-data">
-                <div th:replace="~{fragments/forms::inputRow(object='upload', field='product', type='select', required='true')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='upload', field='orderType', type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='upload', field='headerFile', type='file')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='upload', field='orderFile', type='file')}" />
-                <input type="submit" th:value="#{upload.page.headline}" class="btn btn-primary mt-4" />
+                <div class="form-group row mb-3">
+                    <label th:for="file" class="col-md-2 col-form-label">
+                        <span th:text="#{upload.orderFile.label}" /><span>*</span>
+                    </label>
+                    <div class="col-md-7">
+                        <input type="file" id="orderFile" name="orderFile" class="form-control-file form-control" required="" >
+                    </div>
+                </div>
+                <input type="submit" th:value="#{upload.page.submit}" class="btn btn-primary mt-4" />
             </form>
         </div>
     </body>

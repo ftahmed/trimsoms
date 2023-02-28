@@ -106,75 +106,56 @@ public class OrderController {
         private MultipartFile orderFile;
     }
 
-    @GetMapping("/order/upload")
-    public String uploadPage(@ModelAttribute("upload") final UploadDto uploadDto) {
+    @GetMapping("/order/upload/{product}")
+    public String uploadPage(@PathVariable final String product, final Model model) {
+        model.addAttribute("product", product);
         return "order/upload";
     }
 
-    @PostMapping("/order/upload")
-    public String uploadFile(@ModelAttribute("upload") @Valid final UploadDto uploadDto, 
-            final BindingResult bindingResult, RedirectAttributes attributes) {
+    @PostMapping("/order/upload/{product}")
+    public String uploadFile(@PathVariable final String product, final MultipartFile orderFile, 
+            final Model model, RedirectAttributes attributes) {
 
-        if (!bindingResult.hasFieldErrors("product")) {
-            if (CARELABEL.equals(uploadDto.getProduct()) && uploadDto.getOrderType() == null) {
-                bindingResult.rejectValue("orderType", "upload.orderType.isnull");
-            }
-            // check if header file is empty
-            if (HANGTAG.equals(uploadDto.getProduct()) && uploadDto.getHeaderFile().isEmpty()) {
-                bindingResult.rejectValue("headerFile", "upload.headerFile.empty");
-            }
+        if (orderFile.isEmpty()) {
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.file.empty"));
+            return "redirect:/order/upload";
         }
-        if (uploadDto.getOrderFile().isEmpty()) {
-            bindingResult.rejectValue("orderFile", "upload.orderFile.empty");
+        String originalFilename = StringUtils.cleanPath(orderFile.getOriginalFilename());
+        // already uploaded?
+        if (podService.orderOriginalFileExists(originalFilename)) {
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.file.exists"));
+            return "redirect:/order/upload";
         }
-        if (bindingResult.hasErrors()) {
-            return "order/upload";
-        }
+    
+        // save in the local file system with a unique name
+        try {
+            Path path = Files.createTempFile(Paths.get(UPLOAD_DIR), "ORDER-", ".CSV");
+            Files.copy(orderFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        MultipartFile headerFile = uploadDto.getHeaderFile();
-        if (headerFile != null && !headerFile.isEmpty()) {
-            // normalize the file path and save in the local file system
-            String fileName = StringUtils.cleanPath(headerFile.getOriginalFilename());
-            try {
-                Path path = Paths.get(UPLOAD_DIR + fileName);
-                Files.copy(headerFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                log.error("Failed to upload file", e);
-                attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.headerFile.fail") + " " + e.getMessage() + '!');
+            if ("carelabel".equals(product)) {
+                uploadCarelabelOrders(path, originalFilename);
+            } else if ("hangtag".equals(product)) {
+                uploadHangtagOrders(path, originalFilename);
+            } else {
+                attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + ": Unknown product!");
                 return "redirect:/order/upload";
             }
-
-            // return success response
-            attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.headerFile.success") + " " + fileName + '!');
+        } catch (IOException e) {
+            log.error("Failed to upload file", e);
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + " " + e.getMessage() + '!');
+            return "redirect:/order/upload";
         }
 
-        MultipartFile orderFile = uploadDto.getOrderFile();
-        if (orderFile != null && !orderFile.isEmpty()) {
-            // normalize the file path and save in the local file system
-            String originalFileName = StringUtils.cleanPath(orderFile.getOriginalFilename());
-            try {
-                Path path = Files.createTempFile(Paths.get(UPLOAD_DIR), "ORDER-", ".CSV");
-                // Path path = Paths.get(UPLOAD_DIR + originalFileName);
-                Files.copy(orderFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-                uploadOrders(path.getFileName().toString(), originalFileName, uploadDto.orderType);
-
-            } catch (IOException e) {
-                log.error("Failed to upload file", e);
-                attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + " " + e.getMessage() + '!');
-                return "redirect:/order/upload";
-            }
-
-            // return success response
-            attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + originalFileName + '!');
-        }
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("upload.orderFile.success") + " " + originalFilename + '!');
 
         return "redirect:/order/list";
     }
 
-    private int uploadOrders(String fileName, String originalFileName, String orderType) {
+    private int uploadCarelabelOrders(final Path path, final String originalFilename) {
+        // String fileName = path.getFileName().toString();
         Charset cs = StandardCharsets.UTF_8;
-        try (FileInputStream fis = new FileInputStream(UPLOAD_DIR + fileName)) {
+        try (FileInputStream fis = new FileInputStream(path.toFile())) {
             cs = ByteUtils.detectEncoding(fis);
         } catch (Exception e) {
             log.warn("Failed to detect charset", e);
@@ -183,7 +164,7 @@ public class OrderController {
             
             HeaderColumnNameMappingStrategy<Order> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(Order.class);
-            List<Order> orders = new CsvToBeanBuilder<Order>(new FileReader(UPLOAD_DIR + fileName, cs))
+            List<Order> orders = new CsvToBeanBuilder<Order>(new FileReader(path.toFile(), cs))
                 .withSeparator(';')
                 .withIgnoreEmptyLine(true)
                 .withIgnoreLeadingWhiteSpace(true)
@@ -196,7 +177,7 @@ public class OrderController {
 
             Map<String, PurchaseOrderDetails> pods = new HashMap<>();
             for (Order order : orders) {
-                order.setOrderType(orderType);
+                order.setOrderType("BULK");
                 order.setOrderStatus("New");
                 Long oid = orderService.create(order);
 
@@ -214,8 +195,8 @@ public class OrderController {
                     pod.setVendorCode(order.getVendorId());
                     pod.setFactoryName1(order.getFactoryName1());
 
-                    pod.setOrderFile(fileName);
-                    pod.setOrderOriginalFile(originalFileName);
+                    pod.setOrderFile(path.toFile().getName());
+                    pod.setOrderOriginalFile(originalFilename);
 
                     pods.put(order.getPoNumber(), pod);
                 }
@@ -229,6 +210,11 @@ public class OrderController {
         } catch (Exception e) {
             log.error("Failed to parse orders CSV", e);
         }
+        return -1;
+    }
+
+    private int uploadHangtagOrders(final Path path, final String originalFilename) {
+        // TODO upload hangtag orders
         return -1;
     }
 

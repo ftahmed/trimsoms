@@ -14,5 +14,6 @@ public interface PurchaseOrderDetailsRepository extends JpaRepository<PurchaseOr
     List<PurchaseOrderDetails> findByVendorCode(String vendorCode);
 
     boolean existsByPoNumber(String poNumber);
+    boolean existsByOrderOriginalFile(String orderOriginalFile);
 
 }
