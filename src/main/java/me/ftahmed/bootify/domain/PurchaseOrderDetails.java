@@ -48,7 +48,7 @@ public class PurchaseOrderDetails {
     @Column
     private String brand;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String poNumber;
 
     @Column

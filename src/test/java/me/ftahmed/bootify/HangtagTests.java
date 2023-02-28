@@ -4,9 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +32,6 @@ class HangtagTests {
 
 	@Test
 	public void testParseHangtagRow() throws Exception {
-		// TODO
 		char[] row = HT_DATA.toCharArray();
 		List<String> cols = new ArrayList<>();
 		for (int i=0, pos=0; i<HT_COL_LENGHT.length; i++) {

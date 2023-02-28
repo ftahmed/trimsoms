@@ -6,22 +6,17 @@ import java.util.Map;
 
 public interface Constants {
     
-    public static final String UPLOAD_DIR = "./uploads/";
-
-    public static final String CARELABEL = "carelabel";
-    public static final String HANGTAG = "hangtag";
-
-    public static final Map<String, String> productValues = Map.of(
-        CARELABEL, "Care label", 
-        HANGTAG, "Hangtag"
+    public static final Map<String, String> products = Map.of(
+        "carelabel", "Care label", 
+        "hangtag", "Hangtag"
     );
 
-    public static final Map<String, String> orderTypeValues = Map.of(
+    public static final Map<String, String> orderTypes = Map.of(
         "SMS", "SMS",
         "BULK", "BULK"
     );
 
-    public static final List<String> orderStatusValues = Arrays.asList(
+    public static final List<String> orderStatus = Arrays.asList(
         "New",
         "On hold",
         "Composition updated",

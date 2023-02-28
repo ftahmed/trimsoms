@@ -78,7 +78,7 @@
                                         </span>
                                         <select name="status" id="status" class="form-select">
                                             <option value="" th:text="#{select.empty.label}" />
-                                            <option th:each="status : ${orderStatusValues}" th:value="${status}" th:text="${status}" />
+                                            <option th:each="status : ${orderStatus}" th:value="${status}" th:text="${status}" />
                                         </select>
                                     </div>
                                 </div>

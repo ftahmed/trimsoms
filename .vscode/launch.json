@@ -10,7 +10,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "me.ftahmed.bootify.BootifyApplication",
-            "projectName": "bootify",
+            "projectName": "trimsoms",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         },

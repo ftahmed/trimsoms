@@ -1,11 +1,5 @@
 package me.ftahmed.bootify.controller;
 
-import static me.ftahmed.bootify.config.Constants.CARELABEL;
-import static me.ftahmed.bootify.config.Constants.HANGTAG;
-import static me.ftahmed.bootify.config.Constants.UPLOAD_DIR;
-import static me.ftahmed.bootify.config.Constants.orderTypeValues;
-import static me.ftahmed.bootify.config.Constants.productValues;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -33,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +41,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +64,8 @@ import me.ftahmed.bootify.util.WebUtils;
 @Slf4j
 public class OrderController {
 
+    public static final String UPLOAD_DIR = "./uploads/";
+
     @Autowired 
     private OrderService orderService;
     @Autowired 
@@ -82,10 +77,6 @@ public class OrderController {
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        // upload page
-        model.addAttribute("productValues", productValues);
-        model.addAttribute("orderTypeValues", orderTypeValues);
-
         // list page
         model.addAttribute("pods", List.of());
 
@@ -118,13 +109,13 @@ public class OrderController {
 
         if (orderFile.isEmpty()) {
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.file.empty"));
-            return "redirect:/order/upload";
+            return "redirect:/order/upload/"+product;
         }
         String originalFilename = StringUtils.cleanPath(orderFile.getOriginalFilename());
         // already uploaded?
         if (podService.orderOriginalFileExists(originalFilename)) {
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.file.exists"));
-            return "redirect:/order/upload";
+            return "redirect:/order/upload/"+product;
         }
     
         // save in the local file system with a unique name
@@ -138,12 +129,12 @@ public class OrderController {
                 uploadHangtagOrders(path, originalFilename);
             } else {
                 attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + ": Unknown product!");
-                return "redirect:/order/upload";
+                return "redirect:/order/upload/"+product;
             }
         } catch (IOException e) {
             log.error("Failed to upload file", e);
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("upload.orderFile.fail") + " " + e.getMessage() + '!');
-            return "redirect:/order/upload";
+            return "redirect:/order/upload/"+product;
         }
 
         // return success response
@@ -152,6 +143,7 @@ public class OrderController {
         return "redirect:/order/list";
     }
 
+    @Transactional
     private int uploadCarelabelOrders(final Path path, final String originalFilename) {
         // String fileName = path.getFileName().toString();
         Charset cs = StandardCharsets.UTF_8;
@@ -175,16 +167,15 @@ public class OrderController {
                 .build()
                 .parse();
 
-            Map<String, PurchaseOrderDetails> pods = new HashMap<>();
             for (Order order : orders) {
                 order.setOrderType("BULK");
                 order.setOrderStatus("New");
-                Long oid = orderService.create(order);
+                orderService.create(order);
 
-                PurchaseOrderDetails pod = pods.get(order.getPoNumber());
+                PurchaseOrderDetails pod = podService.findByPoNumber(order.getPoNumber());
                 if (pod == null) {
                     pod = new PurchaseOrderDetails();
-                    pod.setTotalQty(0L);
+                    pod.setTotalQty(order.getQuantity());
 
                     pod.setPoNumber(order.getPoNumber());
                     pod.setStatus(order.getOrderStatus());
@@ -198,13 +189,12 @@ public class OrderController {
                     pod.setOrderFile(path.toFile().getName());
                     pod.setOrderOriginalFile(originalFilename);
 
-                    pods.put(order.getPoNumber(), pod);
+                    podService.create(pod);
+                } else {
+                    pod.setTotalQty(pod.getTotalQty() + order.getQuantity());
+                    pod.setTotalQtyOrig(pod.getTotalQty());
+                    podService.update(order.getPoNumber(), pod);
                 }
-                pod.setTotalQty(pod.getTotalQty() + order.getQuantity());
-                pod.setTotalQtyOrig(pod.getTotalQty());
-            }
-            for (Entry<String, PurchaseOrderDetails> pod : pods.entrySet()) {
-                podService.create(pod.getValue());
             }
             return orders.size();
         } catch (Exception e) {
@@ -242,7 +232,7 @@ public class OrderController {
     
     @GetMapping("/order/manage/{poNumber}")
     public String manage(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
-        model.addAttribute("orderStatusValues", Constants.orderStatusValues);
+        model.addAttribute("orderStatus", Constants.orderStatus);
 
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         model.addAttribute("pods", List.of(pod));
@@ -295,7 +285,6 @@ public class OrderController {
             return "redirect:/order/upload";
         }
 
-        // TODO: update order status
         if (pod.getLayoutDate() != null) {
             pod.setStatus("Layout resubmitted");
             pod.setRejectReason("");
@@ -313,9 +302,8 @@ public class OrderController {
     public String status(@PathVariable() final String poNumber, @RequestParam(required = false) String status, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         if (status == null) {
-            // return success response
+            // return failure response
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("manage.status.fail"));
             return "redirect:/order/manage/"+poNumber;
         }
@@ -334,7 +322,6 @@ public class OrderController {
     public String composition(@PathVariable() final String poNumber, @RequestParam() List<String> cilist, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setCompositions(cilist);
         pod.setStatus("Composition updated");
@@ -372,7 +359,6 @@ public class OrderController {
     public String approve(@PathVariable() final String poNumber,
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setApprovalDate(OffsetDateTime.now());
         pod.setRejectReason("");
@@ -389,7 +375,6 @@ public class OrderController {
     public String reject(@PathVariable() final String poNumber, @RequestParam(required = false) String reason, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setRejectReason(reason);
         pod.setStatus("Layout rejected");
@@ -406,7 +391,6 @@ public class OrderController {
             @RequestParam() List<String> oid, @RequestParam() List<String> oqty, @RequestParam() List<String> nqty, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         try {
             PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
             for (int i=0; i<oid.size(); i++) {
@@ -432,7 +416,6 @@ public class OrderController {
     public String deladdr(@PathVariable() final String poNumber, @RequestParam(required = false) String deladdr, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setDeliveryAddress(deladdr);
         podService.update(poNumber, pod);
@@ -447,7 +430,6 @@ public class OrderController {
     public String confirm(@PathVariable() final String poNumber, @RequestParam() Map<String,String> params, 
             final RedirectAttributes attributes, final Model model) {
 
-        // TODO: update order status
         PurchaseOrderDetails pod = podService.findByPoNumber(poNumber);
         pod.setOrderBy(params.get("orderby"));
         pod.setVendorPo(params.get("vendorpo"));
