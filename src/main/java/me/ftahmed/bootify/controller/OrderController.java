@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +43,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -224,8 +229,9 @@ public class OrderController {
         } catch (Exception e) {
             log.warn("Failed to detect charset", e);
         }
+        int count = 0;
+        String poNumber = "";
         try (BufferedReader reader = Files.newBufferedReader(path, cs)) {
-            int count = 0;
             String line;
             while ((line = reader.readLine()) != null && line.length() != 536) {
                 count++;
@@ -330,6 +336,7 @@ public class OrderController {
                 
                 htOrderService.create(order);
 
+                poNumber = order.getPoNumber();
                 PurchaseOrder po = poService.findByPoNumber(order.getPoNumber());
                 if (po == null) {
                     po = new PurchaseOrder();
@@ -357,12 +364,28 @@ public class OrderController {
 
             }
 
-            return count;
+        } catch (Exception e) {
+            log.error("Failed to parse hangtag orders data", e);
+        }
+
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(UPLOAD_DIR + "hangtag-export.csv"))) {
+            List<HangtagOrder> orders = htOrderService.findByPoNumber(poNumber);
+
+            ColumnPositionMappingStrategy<HangtagOrder> mappingStrategy = new ColumnPositionMappingStrategy<>();
+            mappingStrategy.setType(HangtagOrder.class);
+            String[] columns = new String[] {"brand", "poNumber", "Ean_13"};
+            mappingStrategy.setColumnMapping(columns);
+            StatefulBeanToCsv bc = new StatefulBeanToCsvBuilder(csvWriter)
+                .withMappingStrategy(mappingStrategy)
+                .withApplyQuotesToAll(false)
+                .build();
+            bc.write(orders);
+
         } catch (Exception e) {
             log.error("Failed to parse hangtag orders data", e);
         }
         
-        return -1;
+        return count;
     }
 
     @Autowired
