@@ -35,14 +35,21 @@
                                     <div sec:authentication="name" class="nav-link  input-group-text">username</div>
                                 </div>
                             </li>
-                            <li class="navbar-item" sec:authorize="hasAnyRole('TRM', 'ADMIN')">
-                                <a th:href="@{/order/upload/carelabel}" th:text="#{navigation.carelabel}" class="nav-link" />
+                            <li class="navbar-item dropdown" sec:authorize="isAuthenticated() && !hasRole('VEN')">
+                                <a th:text="#{navigation.carelabel}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" />
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
+                                    <li><a th:href="@{/order/upload/carelabel}" th:text="#{navigation.import}" class="dropdown-item" /></li>
+                                    <li><a th:href="@{/order/list/carelabel}" th:text="#{navigation.list}" class="dropdown-item" /></li>
+                                </ul>
                             </li>
-                            <li class="navbar-item" sec:authorize="hasAnyRole('TRM', 'ADMIN')">
-                                <a th:href="@{/order/upload/hangtag}" th:text="#{navigation.hangtag}" class="nav-link" />
-                            </li>
-                            <li class="navbar-item" sec:authorize="isAuthenticated()">
-                                <a th:href="@{/order/list}" th:text="#{navigation.orders}" class="nav-link" />
+                            <li class="navbar-item dropdown" sec:authorize="isAuthenticated() && !hasRole('VEN')">
+                                <a th:text="#{navigation.hangtag}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" />
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
+                                    <li><a th:href="@{/order/upload/hangtag}" th:text="#{navigation.import}" class="dropdown-item" /></li>
+                                    <li><a th:href="@{/order/list/hangtag}" th:text="#{navigation.list}" class="dropdown-item" /></li>
+                                </ul>
                             </li>
                             <li class="navbar-item dropdown" sec:authorize="hasRole('ADMIN')">
                                 <a th:text="#{navigation.admin}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"

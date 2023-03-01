@@ -22,10 +22,9 @@ public interface Constants {
         "Composition updated",
         "Layout approved",
         "Layout rejected",
-        "Layout resubmitted",
+        "Layout submitted",
         "Cancelled",
         "Confirmed",
-        "Completed",
-        "Delivered"
+        "Completed"
     );
 }

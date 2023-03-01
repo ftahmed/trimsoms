@@ -23,13 +23,16 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class PurchaseOrderDetails {
-
+public class PurchaseOrder {
+    
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String product;
+    
     @Column
     private String type;
     
