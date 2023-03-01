@@ -60,8 +60,8 @@ public class Order {
     @Column(name="pbetrmatch") @CsvBindByName(column = "pbetrmatch") private String factoryId;
     @Column(name="pbetrname1") @CsvBindByName(column = "pbetrname1") private String factoryName1;
     @Column(name="pbetrnr") @CsvBindByName(column = "pbetrnr") private String vendorId;
-    @Column(name="paart") @CsvBindByName(column = "paart") private String poType;
-    @Column(name="paartBez") @CsvBindByName(column = "paart_bez") private String poTypeDescription;
+    @Column(name="paArt") @CsvBindByName(column = "paart") private String poType;
+    @Column(name="paArtBez") @CsvBindByName(column = "paart_bez") private String poTypeDescription;
     @Column(name="designedin") @CsvBindByName(column = "designedin") private String designedIn;
     @Column(name="grbez1") @CsvBindByName(column = "grbez1") private String size1;
     @Column(name="grbez2") @CsvBindByName(column = "grbez2") private String size2;

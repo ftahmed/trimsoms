@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.ftahmed.bootify.config.Constants;
 import me.ftahmed.bootify.domain.Address;
+import me.ftahmed.bootify.domain.HangtagOrder;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrder;
 import me.ftahmed.bootify.domain.User;
@@ -54,6 +56,7 @@ import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.OrderService;
+import me.ftahmed.bootify.service.HangtagOrderService;
 import me.ftahmed.bootify.service.PartService;
 import me.ftahmed.bootify.service.PurchaseOrderService;
 import me.ftahmed.bootify.service.VendorService;
@@ -66,6 +69,9 @@ public class OrderController {
 
     public static final String UPLOAD_DIR = "./uploads/";
 
+    final String HT_DATA = "D000015100001  BB213970231454002342023024065931517085276714158841   5021                5021                36  F  I  GB US 38 42 10 8  01885087151231-4002340000001                                                                                                                                   I1           Collection           D         EUR 49,99A,B,NL    EUR 55,99GB        GBP 55,00GR        EUR 65,00CH        CHF 79,90                                                            MX 30      80  Produktionsauftrag VG         5021 ";
+	final int[] HT_COL_LENGHT = { 1, 5, 9, 2, 6, 3, 2, 6, 6, 13, 4, 4, 4, 3, 20, 20, 4, 3, 3, 3, 3, 3, 3, 3, 3, 1, 9, 15, 3, 12, 6, 3, 10, 10, 4, 20, 20, 20, 20, 3, 3, 1, 12, 20, 1, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 5, 4, 30, 5 };
+
     @Autowired 
     private OrderService orderService;
     @Autowired 
@@ -74,6 +80,8 @@ public class OrderController {
     private CompositionItemService compositionItemService;
     @Autowired
     PurchaseOrderService poService;
+    @Autowired
+    HangtagOrderService htOrderService;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
@@ -208,6 +216,106 @@ public class OrderController {
     @Transactional
     private int uploadHangtagOrders(final Path path, final String originalFilename) {
         // TODO upload hangtag orders
+        char[] row = HT_DATA.toCharArray();
+		List<String> cols = new ArrayList<>();
+		for (int i=0, pos=0; i<HT_COL_LENGHT.length; i++) {
+			cols.add(String.valueOf(row, pos, HT_COL_LENGHT[i]));
+			pos += HT_COL_LENGHT[i];
+		}
+        HangtagOrder order = new HangtagOrder();
+        // order.get
+        order.setRecord_id(cols.get(0));
+        order.setLine_Quantity(cols.get(1));
+        order.setTicket_Type(cols.get(2));
+        order.setBrand(cols.get(3)); // Vp_Alpha
+        order.setProd_Betrieb(cols.get(4));
+        order.setSeason(cols.get(5)); // Saison
+        order.setExf_Termin(cols.get(6));
+        order.setPoNumber(cols.get(7)); // Fa_Nr                 
+        order.setKt_Woche(cols.get(8));
+        order.setEan_13(cols.get(9));
+
+        order.setModell(cols.get(10));
+        order.setStoff(cols.get(11));
+        order.setFarbe(cols.get(12));
+        order.setSetnummerBlank(cols.get(13));
+        order.setProgrammtext_1(cols.get(14));
+        order.setProgrammtext_2(cols.get(15));
+        order.setGrosse(cols.get(16));
+        order.setInter_Bez_1(cols.get(17));
+        order.setInter_Bez_2(cols.get(18));
+        order.setInter_Bez_3(cols.get(19));
+
+        order.setInter_Bez_4(cols.get(20));
+        order.setInter_Gr_1(cols.get(21));
+        order.setInter_Gr_2(cols.get(22));
+        order.setInter_Gr_3(cols.get(23));
+        order.setInter_Gr_4(cols.get(24));
+        order.setDummy(cols.get(25));
+        order.setEinzelteil_Identcode(cols.get(26));
+        order.setReferenceorder(cols.get(27));
+        order.setVp_Numeric(cols.get(28));
+        order.setVariante(cols.get(29));
+
+        order.setPreis(cols.get(30));
+        order.setWahrung(cols.get(31));
+        order.setLogo(cols.get(32));
+        order.setKundennummer(cols.get(33));
+        order.setKundenfilialnummer(cols.get(34));
+        order.setStoffzusammensetzung_1(cols.get(35));
+        order.setStoffzusammensetzung_2(cols.get(36));
+        order.setStoffzusammensetzung_3(cols.get(37));
+        order.setStoffzusammensetzung_4(cols.get(38));
+        order.setSprache(cols.get(39));
+
+        order.setFolienart(cols.get(40));
+        order.setEtikettenart(cols.get(41));
+        order.setSortnummer(cols.get(42));
+        order.setLifestyle_Kollektion(cols.get(43));
+        order.setKurz_Aus_Ort(cols.get(44));
+        order.setCountry_1(cols.get(45));
+        order.setCurrency_1(cols.get(46));
+        order.setPrice_1(cols.get(47));
+        order.setCountry_2(cols.get(48));
+        order.setCurrency_2(cols.get(49));
+
+        order.setPrice_2(cols.get(50));
+        order.setCountry_3(cols.get(51));
+        order.setCurrency_3(cols.get(52));
+        order.setPrice_3(cols.get(53));
+        order.setCountry_4(cols.get(54));
+        order.setCurrency_4(cols.get(55));
+        order.setPrice_4(cols.get(56));
+        order.setCountry_5(cols.get(57));
+        order.setCurrency_5(cols.get(58));
+        order.setPrice_5(cols.get(59));
+
+        order.setCountry_6(cols.get(60));
+        order.setCurrency_6(cols.get(61));
+        order.setPrice_6(cols.get(62));
+        order.setCountry_7(cols.get(63));
+        order.setCurrency_7(cols.get(64));
+        order.setPrice_7(cols.get(65));
+        order.setCountry_8(cols.get(66));
+        order.setCurrency_8(cols.get(67));
+        order.setPrice_8(cols.get(68));
+        order.setCountry_9(cols.get(69));
+
+        order.setCurrency_9(cols.get(70));
+        order.setPrice_9(cols.get(71));
+        order.setCountry_10(cols.get(72));
+        order.setCurrency_10(cols.get(73));
+        order.setPrice_10(cols.get(74));
+        order.setInter_Bez_5(cols.get(75));
+        order.setInter_Gr_5(cols.get(76));
+        order.setEkpreis(cols.get(77));
+        order.setPaArt(cols.get(78));
+        order.setPaArtBez(cols.get(79));
+
+        order.setSetnummer(cols.get(80));
+        
+        htOrderService.create(order);
+
         return -1;
     }
 
