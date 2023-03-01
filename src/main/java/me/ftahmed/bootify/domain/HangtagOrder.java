@@ -37,7 +37,7 @@ public class HangtagOrder {
     @Column(name="Line_Quantity") private String Line_Quantity;
     @Column(name="Ticket_Type") private String Ticket_Type;
     @Column(name="Vp_Alpha") private String brand;
-    @Column(name="Prod_Betrieb") private String Prod_Betrieb;
+    @Column(name="Prod_Betrieb") private String VendorId;
     @Column(name="Saison") private String season;
     @Column(name="Exf_Termin") private String Exf_Termin;
     @Column(name="Fa_Nr") private String poNumber;
