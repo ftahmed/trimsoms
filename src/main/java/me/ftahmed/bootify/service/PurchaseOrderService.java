@@ -22,10 +22,18 @@ public class PurchaseOrderService {
         return poRepository.findAll();
     }
 
+    public List<PurchaseOrder> findByProduct(final String product) {
+        return poRepository.findByProduct(product);
+    }
+    
     public List<PurchaseOrder> findByVendorCode(final String vendorCode) {
         return poRepository.findByVendorCode(vendorCode);
     }
 
+    public List<PurchaseOrder> findByProductAndVendorCode(final String product, final String vendorCode) {
+        return poRepository.findByProductAndVendorCode(product, vendorCode);
+    }
+    
     public PurchaseOrder findByPoNumber(final String poNumber) {
         return poRepository.findByPoNumber(poNumber);
     }

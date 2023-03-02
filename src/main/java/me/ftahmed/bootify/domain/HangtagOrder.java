@@ -176,6 +176,13 @@ public class HangtagOrder {
     //     return this.etCode;
     // }
 
+    public void setSortnummer(String value) {
+        this.Sortnummer = value;
+        // int row = (int) Math.ceil(Integer.parseInt(value) / 16);
+        // int col = Integer.parseInt(value) % 16;
+        // int seq = (row * 16) + col;
+    }
+
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")
     @CsvIgnore

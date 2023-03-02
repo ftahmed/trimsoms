@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 th:text="#{order.list.headline}" class="flex-grow-1" />
+                <h1 th:text="${#messages.msg('navigation.'+product)}+' '+#{order.list.headline}" class="flex-grow-1" />
             </div>
             <!-- purchase orders -->
             <div th:if="${pos.empty}" th:text="#{order.list.empty}" />
@@ -18,8 +18,8 @@
                             <th th:text="#{order.brand.label}" scope="col" />
                             <th th:text="#{order.season.label}" scope="col" />
                             <th th:text="#{order.poNumber.label}" scope="col" />
-                            <th th:text="#{order.ticketType.label}" scope="col" />
-                            <th th:text="#{order.ticketName.label}" scope="col" />
+                            <th th:if="${product == 'hangtag'}" th:text="#{order.ticketType.label}" scope="col" />
+                            <th th:if="${product == 'hangtag'}" th:text="#{order.ticketName.label}" scope="col" />
                             <th th:text="#{order.vendorCode.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
@@ -32,19 +32,35 @@
                             <td th:text="${po.brand}" />
                             <td th:text="${po.season}" />
                             <td th:text="${po.poNumber}" />
-                            <td><!-- --></td>
-                            <td><!-- --></td>
+                            <td th:if="${product == 'hangtag'}" th:text="${po.ticket.code}" />
+                            <td th:if="${product == 'hangtag'}" th:text="${po.ticket.name}" />
                             <td th:text="${po.vendorCode}" />
                             <td th:text="${po.factoryName1}" />
                             <td th:text="${po.totalQty}" />
                             <td th:text="${po.status}"/>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/order/manage/{poNumber}(poNumber=${po.poNumber})}">
+                                    <a th:if="${product == 'carelabel'}" th:href="@{/order/manage/{poNumber}(poNumber=${po.poNumber})}">
                                         <button type="button" class="btn btn-outline">
                                             <img src="/images/pencil-square.svg" width="20" height="20"/>
                                         </button>
                                     </a>
+                                    <a th:if="${product == 'hangtag'}" th:href="@{/order/htcsv/{poNumber}(poNumber=${po.poNumber})}">
+                                        <button type="button" class="btn btn-outline">
+                                            <img src="/images/download.png" width="20" height="20"/>
+                                        </button>
+                                    </a>
+                                    <!-- <a th:href="@{/order/completed/{poNumber}(poNumber=${po.poNumber})}">
+                                        <button type="button" class="btn btn-outline">
+                                            <img src="/images/completed.png" width="20" height="20"/>
+                                        </button>
+                                    </a> -->
+                                    <form class="float-end text-nowrap" th:action="@{/order/manage/{poNumber}/status(poNumber=${po.poNumber})}" method="post" >
+                                        <input type="hidden" name="status" id="status" value="Completed" />
+                                        <button type="submit" class="btn btn-outline">
+                                            <img src="/images/completed.png" width="20" height="20"/>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

@@ -13,6 +13,10 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
 
     List<PurchaseOrder> findByVendorCode(String vendorCode);
 
+    List<PurchaseOrder> findByProduct(String product);
+
+    List<PurchaseOrder> findByProductAndVendorCode(String product, String vendorCode);
+
     boolean existsByPoNumber(String poNumber);
     boolean existsByOrderOriginalFile(String orderOriginalFile);
 

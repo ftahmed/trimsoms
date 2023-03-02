@@ -54,6 +54,7 @@ import me.ftahmed.bootify.domain.Address;
 import me.ftahmed.bootify.domain.HangtagOrder;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrder;
+import me.ftahmed.bootify.domain.Ticket;
 import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.repos.UserRepository;
@@ -62,6 +63,7 @@ import me.ftahmed.bootify.service.HangtagOrderService;
 import me.ftahmed.bootify.service.OrderService;
 import me.ftahmed.bootify.service.PartService;
 import me.ftahmed.bootify.service.PurchaseOrderService;
+import me.ftahmed.bootify.service.TicketService;
 import me.ftahmed.bootify.service.VendorService;
 import me.ftahmed.bootify.util.ByteUtils;
 import me.ftahmed.bootify.util.CsvNameAndPositionMappingStrategy;
@@ -85,6 +87,10 @@ public class OrderController {
     PurchaseOrderService poService;
     @Autowired
     HangtagOrderService htOrderService;
+    @Autowired
+    VendorService vendorService;
+    @Autowired
+    TicketService ticketService;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
@@ -343,7 +349,10 @@ public class OrderController {
                     po.setSeason(order.getSeason());
                     po.setBrand(order.getBrand());
                     po.setReferenceOrder(order.getReferenceorder());
+
+                    po.setTicket(ticketService.findByCode(order.getTicket_Type().trim()).get());
                     po.setVendorCode(order.getVendorId());
+                    po.setFactoryName1(vendorService.findByVendorCode(order.getVendorId()).get().getVendorName());
 
                     po.setOrderFile(path.toFile().getName());
                     po.setOrderOriginalFile(originalFilename);
@@ -389,23 +398,42 @@ public class OrderController {
 
     @GetMapping("/order/list/{product}")
     public String list(@PathVariable final String product, final Model model) {
-        // TODO: Care label and hangtag purchase orders
         // TODO: Add filters
         
+        model.addAttribute("product", product);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginUsername = authentication.getName();
         User user = userRepository.findByUsername(loginUsername).orElse(new User());
         if (user.getVendor() != null && authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_VEN"))) {
-            model.addAttribute("pos", poService.findByVendorCode(user.getVendor().getVendorCode()));
+            model.addAttribute("pos", poService.findByProductAndVendorCode(product, user.getVendor().getVendorCode()));
         } else {
-            model.addAttribute("pos", poService.findAll());
+            model.addAttribute("pos", poService.findByProduct(product));
         }
         
         return "order/list";
     }
 
-    @Autowired
-    VendorService verndorService;
+    @GetMapping("/order/htcsv/{poNumber}")
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> htCsv(@PathVariable() final String poNumber) {
+        try {
+            final HttpHeaders httpHeaders = new HttpHeaders();
+            final File file = new File(UPLOAD_DIR + "hangtag-" + poNumber + ".csv");
+            final InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            httpHeaders.set(HttpHeaders.LAST_MODIFIED, String.valueOf(file.lastModified()));
+            httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
+            httpHeaders.set(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()));
+            return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+        } catch (Exception e) {
+            log.error("Unable to open layout file", e);
+        }
+        return ResponseEntity.notFound().build();
+    }
     
     @GetMapping("/order/manage/{poNumber}")
     public String manage(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
@@ -422,7 +450,7 @@ public class OrderController {
         model.addAttribute("deladdr", new Address());
         model.addAttribute("invaddr", new Address());
 
-        Optional<Vendor> v = verndorService.findByVendorCode(po.getVendorCode());
+        Optional<Vendor> v = vendorService.findByVendorCode(po.getVendorCode());
         if (v.isPresent()) {
             model.addAttribute("vaddrs", v.get().getAddresses());
             for (Address addr: v.get().getAddresses()) {
@@ -489,7 +517,7 @@ public class OrderController {
         // return success response
         attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("manage.status.success") + ": " + status + '!');
         
-        return "redirect:/order/manage/"+poNumber;
+        return "redirect:/order/list/"+po.getProduct();
     }
 
     @PostMapping("/order/manage/{poNumber}/composition")

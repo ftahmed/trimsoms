@@ -29,7 +29,7 @@ public class Ticket {
     @Column(nullable = false, unique = true)
     private String code;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @CreatedDate
