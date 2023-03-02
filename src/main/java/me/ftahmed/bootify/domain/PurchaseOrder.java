@@ -87,7 +87,7 @@ public class PurchaseOrder {
     private String rejectReason;
 
     @Column
-    private String ReferenceOrder;
+    private String referenceOrder;
     
     @ManyToOne
     @JoinColumn(referencedColumnName = "code")

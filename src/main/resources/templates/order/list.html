@@ -18,12 +18,10 @@
                             <th th:text="#{order.brand.label}" scope="col" />
                             <th th:text="#{order.season.label}" scope="col" />
                             <th th:text="#{order.poNumber.label}" scope="col" />
-                            <th th:text="#{order.articleNumber.label}" scope="col" />
-                            <th th:text="#{order.orderType.label}" scope="col" />
+                            <th th:text="#{order.ticketType.label}" scope="col" />
+                            <th th:text="#{order.ticketName.label}" scope="col" />
                             <th th:text="#{order.vendorCode.label}" scope="col" />
                             <th th:text="#{order.factoryName1.label}" scope="col" />
-                            <th th:text="#{order.quantityOrig.label}" scope="col" />
-                            <th th:text="#{order.quantityAdd.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
@@ -34,12 +32,10 @@
                             <td th:text="${po.brand}" />
                             <td th:text="${po.season}" />
                             <td th:text="${po.poNumber}" />
-                            <td th:text="${po.articleNumber}" />
-                            <td th:text="${po.type}" />
+                            <td><!-- --></td>
+                            <td><!-- --></td>
                             <td th:text="${po.vendorCode}" />
                             <td th:text="${po.factoryName1}" />
-                            <td th:text="${po.totalQtyOrig}" />
-                            <td th:text="${po.totalQty-po.totalQtyOrig}" />
                             <td th:text="${po.totalQty}" />
                             <td th:text="${po.status}"/>
                             <td>

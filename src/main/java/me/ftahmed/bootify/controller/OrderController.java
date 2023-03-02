@@ -14,10 +14,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +38,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
-import com.opencsv.enums.CSVReaderNullFieldIndicator;
-import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -61,12 +58,13 @@ import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.service.CompositionItemService;
-import me.ftahmed.bootify.service.OrderService;
 import me.ftahmed.bootify.service.HangtagOrderService;
+import me.ftahmed.bootify.service.OrderService;
 import me.ftahmed.bootify.service.PartService;
 import me.ftahmed.bootify.service.PurchaseOrderService;
 import me.ftahmed.bootify.service.VendorService;
 import me.ftahmed.bootify.util.ByteUtils;
+import me.ftahmed.bootify.util.CsvNameAndPositionMappingStrategy;
 import me.ftahmed.bootify.util.WebUtils;
 
 @Controller
@@ -75,8 +73,6 @@ public class OrderController {
 
     public static final String UPLOAD_DIR = "./uploads/";
 
-    // final String HT_DATA = "D000015100001  BB213970231454002342023024065931517085276714158841   5021                5021                36  F  I  GB US 38 42 10 8  01885087151231-4002340000001                                                                                                                                   I1           Collection           D         EUR 49,99A,B,NL    EUR 55,99GB        GBP 55,00GR        EUR 65,00CH        CHF 79,90                                                            MX 30      80  Produktionsauftrag VG         5021 ";
-    final String HT_DATA = "D000015100001  BB214060232184000292023284065931690597595021334685   1081 C              1081 C              48  F  I  GB US 50 54 22 20 01936876461232-4000290000001                                                                                                                                   I632         Collection           D         EUR 79,99A,B,NL    EUR 89,99GB        GBP100,00GR        EUR 99,00CH        CHF109,90                                                            MX 42      80  Produktionsauftrag VG         1081 ";
 	final int[] HT_COL_LENGHT = { 1, 5, 9, 2, 6, 3, 2, 6, 6, 13, 4, 4, 4, 3, 20, 20, 4, 3, 3, 3, 3, 3, 3, 3, 3, 1, 9, 15, 3, 12, 6, 3, 10, 10, 4, 20, 20, 20, 20, 3, 3, 1, 12, 20, 1, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 5, 4, 30, 5 };
 
     @Autowired 
@@ -160,7 +156,6 @@ public class OrderController {
 
     @Transactional
     private int uploadCarelabelOrders(final Path path, final String originalFilename) {
-        // String fileName = path.getFileName().toString();
         Charset cs = StandardCharsets.UTF_8;
         try (FileInputStream fis = new FileInputStream(path.toFile())) {
             cs = ByteUtils.detectEncoding(fis);
@@ -233,14 +228,12 @@ public class OrderController {
         String poNumber = "";
         try (BufferedReader reader = Files.newBufferedReader(path, cs)) {
             String line;
-            while ((line = reader.readLine()) != null && line.length() != 536) {
+            while ((line = reader.readLine()) != null && line.length() == 534) {
                 count++;
-                // char[] row = HT_DATA.toCharArray();
                 char[] row = line.toCharArray();
                 List<String> cols = new ArrayList<>();
-                for (int i=0, pos=0; i<HT_COL_LENGHT.length; i++) {
+                for (int i=0, pos=0; i<HT_COL_LENGHT.length; pos += HT_COL_LENGHT[i], i++) {
                     cols.add(String.valueOf(row, pos, HT_COL_LENGHT[i]));
-                    pos += HT_COL_LENGHT[i];
                 }
                 HangtagOrder order = new HangtagOrder();
                 // order.get
@@ -368,14 +361,12 @@ public class OrderController {
             log.error("Failed to parse hangtag orders data", e);
         }
 
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(UPLOAD_DIR + "hangtag-export.csv"))) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(UPLOAD_DIR + "hangtag-" + poNumber + ".csv"))) {
             List<HangtagOrder> orders = htOrderService.findByPoNumber(poNumber);
 
-            ColumnPositionMappingStrategy<HangtagOrder> mappingStrategy = new ColumnPositionMappingStrategy<>();
+            CsvNameAndPositionMappingStrategy<HangtagOrder> mappingStrategy = new CsvNameAndPositionMappingStrategy<>();
             mappingStrategy.setType(HangtagOrder.class);
-            String[] columns = new String[] {"brand", "poNumber", "Ean_13"};
-            mappingStrategy.setColumnMapping(columns);
-            StatefulBeanToCsv bc = new StatefulBeanToCsvBuilder(csvWriter)
+            StatefulBeanToCsv<HangtagOrder> bc = new StatefulBeanToCsvBuilder<HangtagOrder>(csvWriter)
                 .withMappingStrategy(mappingStrategy)
                 .withApplyQuotesToAll(false)
                 .build();
@@ -403,8 +394,8 @@ public class OrderController {
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginUsername = authentication.getName();
-        User user = userRepository.findByUsername(loginUsername).get();
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_VEN"))) {
+        User user = userRepository.findByUsername(loginUsername).orElse(new User());
+        if (user.getVendor() != null && authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_VEN"))) {
             model.addAttribute("pos", poService.findByVendorCode(user.getVendor().getVendorCode()));
         } else {
             model.addAttribute("pos", poService.findAll());

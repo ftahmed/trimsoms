@@ -74,4 +74,16 @@ class HangtagTests {
 		return digit;
 	}
 
+	@Test
+	public void testSequence() {
+		int breakPoint = 1024;
+        for(int i=-15; i<=0; i++){
+            int val = i;
+            while(val+16 <= breakPoint){
+                val += 16;
+                System.out.println(val);
+            }
+        }
+	}
+
 }
