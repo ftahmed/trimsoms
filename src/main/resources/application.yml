@@ -81,10 +81,8 @@ spring:
     # resources.static-locations=${project.base-dir}/src/main/resources/static/
     resources.cache.period: 300
   servlet.multipart:
-    # default 1MB
-    max-file-size: 2MB
-    # default 10MB
-    max-request-size: 20MB
+    max-file-size: 20MB
+    max-request-size: 25MB
   thymeleaf:
     # prefix: ${project.base-dir}/src/main/resources/templates/
     cache: true

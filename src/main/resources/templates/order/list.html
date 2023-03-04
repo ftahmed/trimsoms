@@ -25,6 +25,7 @@
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
+                            <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,12 +51,12 @@
                                             <img src="/images/download.png" width="20" height="20"/>
                                         </button>
                                     </a>
-                                    <!-- <a th:href="@{/order/completed/{poNumber}(poNumber=${po.poNumber})}">
-                                        <button type="button" class="btn btn-outline">
-                                            <img src="/images/completed.png" width="20" height="20"/>
-                                        </button>
-                                    </a> -->
-                                    <form class="float-end text-nowrap" th:action="@{/order/manage/{poNumber}/status(poNumber=${po.poNumber})}" method="post" >
+                                </div>
+                            </td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <form th:action="@{/order/manage/{poNumber}/status(poNumber=${po.poNumber})}" method="post" >
+                                        <input type="hidden" name="product" id="product" th:value="${product}" />
                                         <input type="hidden" name="status" id="status" value="Completed" />
                                         <button type="submit" class="btn btn-outline">
                                             <img src="/images/completed.png" width="20" height="20"/>

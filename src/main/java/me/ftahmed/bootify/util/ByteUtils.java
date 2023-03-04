@@ -9,10 +9,12 @@ import com.ibm.icu.text.CharsetMatch;
 
 public class ByteUtils {
 
+    public static final int PEEK_LENGTH = 1024;
+
     public static Charset detectEncoding(InputStream in) throws IOException {
         final CharsetDetector detector = new CharsetDetector();
-        byte[] b = new byte[256];
-        in.read(b, 0, 256);
+        byte[] b = new byte[PEEK_LENGTH];
+        in.read(b, 0, PEEK_LENGTH);
         detector.setText(b);
 
         final CharsetMatch charsetMatch = detector.detect();

@@ -9,15 +9,12 @@ import me.ftahmed.bootify.domain.PurchaseOrder;
 
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
 
-    PurchaseOrder findByPoNumber(String poNumber);
+    PurchaseOrder findByProductAndPoNumber(String product, String poNumber);
 
-    List<PurchaseOrder> findByVendorCode(String vendorCode);
+    List<PurchaseOrder> findByProductOrderByPoNumber(String product);
+    List<PurchaseOrder> findByProductAndVendorCodeOrderByPoNumber(String product, String vendorCode);
 
-    List<PurchaseOrder> findByProduct(String product);
-
-    List<PurchaseOrder> findByProductAndVendorCode(String product, String vendorCode);
-
-    boolean existsByPoNumber(String poNumber);
+    boolean existsByProductAndPoNumber(String product, String poNumber);
     boolean existsByOrderOriginalFile(String orderOriginalFile);
 
 }

@@ -67,6 +67,7 @@
                             </div>
                         </form>
                         <form th:action="${T(me.ftahmed.bootify.util.WebUtils).getRequest().requestURI+'/status'}" method="post" >
+                            <input type="hidden" name="product" id="product" th:value="${'carelabel'}" />
                             <div class="row mb-3">
                                 <label th:for="status" class="col-md-3 col-form-label">
                                     <span th:text="#{manage.status.label}" />

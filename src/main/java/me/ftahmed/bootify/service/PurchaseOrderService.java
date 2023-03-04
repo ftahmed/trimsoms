@@ -18,28 +18,20 @@ public class PurchaseOrderService {
         this.poRepository = poRepository;
     }
 
-    public List<PurchaseOrder> findAll() {
-        return poRepository.findAll();
+    public PurchaseOrder findByProductAndPoNumber(final String product, final String poNumber) {
+        return poRepository.findByProductAndPoNumber(product, poNumber);
     }
-
+    
     public List<PurchaseOrder> findByProduct(final String product) {
-        return poRepository.findByProduct(product);
+        return poRepository.findByProductOrderByPoNumber(product);
     }
     
-    public List<PurchaseOrder> findByVendorCode(final String vendorCode) {
-        return poRepository.findByVendorCode(vendorCode);
-    }
-
     public List<PurchaseOrder> findByProductAndVendorCode(final String product, final String vendorCode) {
-        return poRepository.findByProductAndVendorCode(product, vendorCode);
+        return poRepository.findByProductAndVendorCodeOrderByPoNumber(product, vendorCode);
     }
     
-    public PurchaseOrder findByPoNumber(final String poNumber) {
-        return poRepository.findByPoNumber(poNumber);
-    }
-
-    public boolean poNumberExists(final String poNumber) {
-        return poRepository.existsByPoNumber(poNumber);
+    public boolean poNumberExists(final String product, final String poNumber) {
+        return poRepository.existsByProductAndPoNumber(product, poNumber);
     }
 
     public boolean orderOriginalFileExists(final String orderOriginalFile) {
@@ -51,7 +43,7 @@ public class PurchaseOrderService {
     }
 
     public void update(final String poNumber, final PurchaseOrder po) {
-        if (!poNumberExists(poNumber)) {
+        if (!poNumberExists(po.getProduct(), poNumber)) {
             throw new NotFoundException();
         }
         poRepository.save(po);

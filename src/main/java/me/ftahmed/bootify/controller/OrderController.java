@@ -77,14 +77,14 @@ public class OrderController {
 
 	final int[] HT_COL_LENGHT = { 1, 5, 9, 2, 6, 3, 2, 6, 6, 13, 4, 4, 4, 3, 20, 20, 4, 3, 3, 3, 3, 3, 3, 3, 3, 1, 9, 15, 3, 12, 6, 3, 10, 10, 4, 20, 20, 20, 20, 3, 3, 1, 12, 20, 1, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 10, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 6, 3, 3, 5, 4, 30, 5 };
 
+    @Autowired
+    PurchaseOrderService poService;
     @Autowired 
-    private OrderService orderService;
+    private OrderService clOrderService;
     @Autowired 
     private PartService partService;
     @Autowired 
     private CompositionItemService compositionItemService;
-    @Autowired
-    PurchaseOrderService poService;
     @Autowired
     HangtagOrderService htOrderService;
     @Autowired
@@ -186,9 +186,9 @@ public class OrderController {
             for (Order order : orders) {
                 order.setOrderType("BULK");
                 order.setOrderStatus("New");
-                orderService.create(order);
+                clOrderService.create(order);
 
-                PurchaseOrder po = poService.findByPoNumber(order.getPoNumber());
+                PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", order.getPoNumber());
                 if (po == null) {
                     po = new PurchaseOrder();
                     po.setProduct("carelabel");
@@ -336,7 +336,7 @@ public class OrderController {
                 htOrderService.create(order);
 
                 poNumber = order.getPoNumber();
-                PurchaseOrder po = poService.findByPoNumber(order.getPoNumber());
+                PurchaseOrder po = poService.findByProductAndPoNumber("hangtag", order.getPoNumber());
                 if (po == null) {
                     po = new PurchaseOrder();
                     po.setProduct("hangtag");
@@ -439,10 +439,10 @@ public class OrderController {
     public String manage(@PathVariable final String poNumber, final RedirectAttributes redirectAttributes, final Model model) {
         model.addAttribute("orderStatus", Constants.orderStatus);
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         model.addAttribute("pos", List.of(po));
         model.addAttribute("cilist", po.getCompositions());
-        model.addAttribute("orders", orderService.findByPoNumber(poNumber));
+        model.addAttribute("orders", clOrderService.findByPoNumber(poNumber));
 
         model.addAttribute("parts", partService.findAll());
         model.addAttribute("cis", compositionItemService.findAll());
@@ -473,7 +473,7 @@ public class OrderController {
             return "redirect:/order/manage/"+poNumber;
         }
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         
         // normalize the file path and save in the local file system
         String fileName = StringUtils.cleanPath(layoutfile.getOriginalFilename());
@@ -501,7 +501,8 @@ public class OrderController {
     }
 
     @PostMapping("/order/manage/{poNumber}/status")
-    public String status(@PathVariable() final String poNumber, @RequestParam(required = false) String status, 
+    public String status(@PathVariable() final String poNumber, 
+            @RequestParam() final String product, @RequestParam(required = false) String status, 
             final RedirectAttributes attributes, final Model model) {
 
         if (status == null) {
@@ -510,7 +511,7 @@ public class OrderController {
             return "redirect:/order/manage/"+poNumber;
         }
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber(product, poNumber);
         po.setStatus(status);
         poService.update(poNumber, po);
 
@@ -524,7 +525,7 @@ public class OrderController {
     public String composition(@PathVariable() final String poNumber, @RequestParam() List<String> cilist, 
             final RedirectAttributes attributes, final Model model) {
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         po.setCompositions(cilist);
         po.setStatus("Composition updated");
         poService.update(poNumber, po);
@@ -539,7 +540,7 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<InputStreamResource> viewlayout(@PathVariable() final String poNumber) {
         try {
-            PurchaseOrder po = poService.findByPoNumber(poNumber);
+            PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
             final HttpHeaders httpHeaders = new HttpHeaders();
             final File file = new File(UPLOAD_DIR + po.getLayoutFile());
             final InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
@@ -561,7 +562,7 @@ public class OrderController {
     public String approve(@PathVariable() final String poNumber,
             final RedirectAttributes attributes, final Model model) {
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         po.setApprovalDate(OffsetDateTime.now());
         po.setRejectReason("");
         po.setStatus("Layout approved");
@@ -577,7 +578,7 @@ public class OrderController {
     public String reject(@PathVariable() final String poNumber, @RequestParam(required = false) String reason, 
             final RedirectAttributes attributes, final Model model) {
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         po.setRejectReason(reason);
         po.setStatus("Layout rejected");
         poService.update(poNumber, po);
@@ -594,13 +595,13 @@ public class OrderController {
             final RedirectAttributes attributes, final Model model) {
 
         try {
-            PurchaseOrder po = poService.findByPoNumber(poNumber);
+            PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
             for (int i=0; i<oid.size(); i++) {
-                Order o = orderService.findById(oid.get(i));
+                Order o = clOrderService.findById(oid.get(i));
                 long oq = Long.parseLong(oqty.get(i));
                 long nq = Long.parseLong(nqty.get(i));
                 o.setQuantity(nq);
-                orderService.update(o);
+                clOrderService.update(o);
                 po.setTotalQty(po.getTotalQty() - oq + nq);
                 poService.update(poNumber, po);
             }
@@ -618,7 +619,7 @@ public class OrderController {
     public String deladdr(@PathVariable() final String poNumber, @RequestParam(required = false) String deladdr, 
             final RedirectAttributes attributes, final Model model) {
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         po.setDeliveryAddress(deladdr);
         poService.update(poNumber, po);
 
@@ -632,7 +633,7 @@ public class OrderController {
     public String confirm(@PathVariable() final String poNumber, @RequestParam() Map<String,String> params, 
             final RedirectAttributes attributes, final Model model) {
 
-        PurchaseOrder po = poService.findByPoNumber(poNumber);
+        PurchaseOrder po = poService.findByProductAndPoNumber("carelabel", poNumber);
         po.setOrderBy(params.get("orderby"));
         po.setVendorPo(params.get("vendorpo"));
         po.setPrinterNotes(params.get("notes"));
