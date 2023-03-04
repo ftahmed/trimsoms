@@ -234,7 +234,10 @@ public class OrderController {
         String poNumber = "";
         try (BufferedReader reader = Files.newBufferedReader(path, cs)) {
             String line;
-            while ((line = reader.readLine()) != null && line.length() == 534) {
+            while ((line = reader.readLine()) != null) {
+                if (line.length() != 534) {
+                    continue; 
+                }
                 count++;
                 char[] row = line.toCharArray();
                 List<String> cols = new ArrayList<>();

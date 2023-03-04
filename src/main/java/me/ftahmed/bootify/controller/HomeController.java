@@ -9,13 +9,17 @@ public class HomeController {
 
     @GetMapping("/")
     public String index() {
-        // return "home/index";
-        return "redirect:order/list";
+        return "home/index";
     }
 
     @GetMapping("/login")
     public String login() {
         return "home/login";
+    }
+
+    @GetMapping("/authinfo")
+    public String authinfo() {
+        return "home/authinfo";
     }
 
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>me.ftahmed</groupId>
     <artifactId>trimsoms</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>Trims OMS</name>
 
     <properties>
