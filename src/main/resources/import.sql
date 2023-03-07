@@ -315,3 +315,27 @@ INSERT INTO ticket (code, "name") VALUES ('5100069', 'Cartoon UPgreat');
 INSERT INTO ticket (code, "name") VALUES ('6000000', 'SMS Tag');
 
 COMMIT;
+
+BEGIN;
+
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty Barclay + so cosy + Gil Bret', '40-76-2908' , 'String' , 'Ribbon', 14.00);
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '40-76-2991', 'Woven', 'Ribbon', '65.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '40-76-2992', 'String', 'Ribbon', '100.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co Amber & June', '40-76-703', 'Seal', 'String for pricetag', '10.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty Barclay', '75-10-1000', 'Woven', 'Brandlabel', '40.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('So cosy', '75-10-5000', 'PFL', 'Brandlabel', '50.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '75-10-510', 'Woven', 'Brandlabel small', '85.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co', '75-10-7009', 'Woven', '"FLAG ""grey"""', '60.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co', '75-10-7015', 'Woven', '"FLAG ""white"""', '60.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & CO', '75-10-7100', 'Woven', 'Brandlabel rectangle endfold', '50.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co', '75-10-7101', 'Woven', 'Brandlabel square endfold', '85.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '75-10-900', 'PFL', 'Brandlabel', '140.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '76-11-1200', 'Hangtag', 'Additional HT', '170.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co', '76-11-2010', 'Hangtag', 'Hangtag (2pcs)', '60.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '76-11-501', 'Hangtag', 'Additional HT', '150.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty Barclay', '76-11-6103', 'hangtag', 'HT intensive colour', '35.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('ALL Brands', '76-11-6129', 'Hangtag', 'We respect Cotton incl. CO-ribbon', '70.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('ALL Brands', '76-11-6134', 'Hangtag', 'We respect ECOVERO incl. CO-ribbon', '70.00');
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '76-11-701', 'Hangtag Combo', 'Hangtag', '170.00');
+
+COMMIT;
