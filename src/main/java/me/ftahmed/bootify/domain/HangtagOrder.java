@@ -82,7 +82,7 @@ public class HangtagOrder {
     @Column(name="Inter_Gr_4") private String Inter_Gr_4;
     @Column(name="dummy") private String dummy;
     @Column(name="Einzelteil_Identcode") private String Einzelteil_Identcode;
-    @Column(name="Referenceorder") private String Referenceorder;
+    @Column(name="Referenceorder") private String referenceorder;
     @Column(name="Vp_Numeric") private String Vp_Numeric;
     @Column(name="Variante") private String Variante;
     @Column(name="Preis") private String Preis;

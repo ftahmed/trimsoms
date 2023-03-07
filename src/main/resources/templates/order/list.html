@@ -51,7 +51,7 @@
                             </td>
                             <td sec:authorize="!hasRole('VEN')">
                                 <div class="float-end text-nowrap">
-                                    <a th:if="${product == 'hangtag'}" th:href="@{/order/htcsv/{poNumber}(poNumber=${po.poNumber})}">
+                                    <a th:if="${product == 'hangtag'}" th:href="@{/order/htcsv/{referenceorder}(referenceorder=${po.referenceOrder})}">
                                         <button type="button" class="btn btn-outline">
                                             <img src="/images/download.png" width="20" height="20"/>
                                         </button>

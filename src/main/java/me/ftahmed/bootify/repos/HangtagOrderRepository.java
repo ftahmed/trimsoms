@@ -11,5 +11,6 @@ public interface HangtagOrderRepository extends JpaRepository<HangtagOrder, Long
     HangtagOrder findById(String id);
     List<HangtagOrder> findByBrandAndSeasonOrderById(String brand, String season);
     List<HangtagOrder> findByPoNumberOrderById(String poNumber);
+    List<HangtagOrder> findByReferenceorderOrderById(String referenceorder);
 
 }

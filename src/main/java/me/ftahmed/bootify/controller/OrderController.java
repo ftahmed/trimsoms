@@ -231,7 +231,7 @@ public class OrderController {
             log.warn("Failed to detect charset", e);
         }
         int count = 0;
-        String poNumber = "";
+        String referenceorder = "";
         try (BufferedReader reader = Files.newBufferedReader(path, cs)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -338,8 +338,8 @@ public class OrderController {
                 
                 htOrderService.create(order);
 
-                poNumber = order.getPoNumber();
-                PurchaseOrder po = poService.findByProductAndPoNumber("hangtag", order.getPoNumber());
+                referenceorder = order.getReferenceorder();
+                PurchaseOrder po = poService.findByProductAndReferenceOrder("hangtag", order.getReferenceorder());
                 if (po == null) {
                     po = new PurchaseOrder();
                     po.setProduct("hangtag");
@@ -373,8 +373,8 @@ public class OrderController {
             log.error("Failed to parse hangtag orders data", e);
         }
 
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(UPLOAD_DIR + "hangtag-" + poNumber + ".csv"))) {
-            List<HangtagOrder> orders = htOrderService.findByPoNumber(poNumber);
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(UPLOAD_DIR + "hangtag-" + referenceorder + ".csv"))) {
+            List<HangtagOrder> orders = htOrderService.findByReferenceorder(referenceorder);
 
             CsvNameAndPositionMappingStrategy<HangtagOrder> mappingStrategy = new CsvNameAndPositionMappingStrategy<>();
             mappingStrategy.setType(HangtagOrder.class);
@@ -417,12 +417,20 @@ public class OrderController {
         return "order/list";
     }
 
-    @GetMapping("/order/htcsv/{poNumber}")
+    @GetMapping("/order/htcsv/{referenceorder}")
     @ResponseBody
-    public ResponseEntity<InputStreamResource> htCsv(@PathVariable() final String poNumber) {
+    public ResponseEntity<InputStreamResource> htCsv(@PathVariable() final String referenceorder) {
         try {
             final HttpHeaders httpHeaders = new HttpHeaders();
-            final File file = new File(UPLOAD_DIR + "hangtag-" + poNumber + ".csv");
+            File file = new File(UPLOAD_DIR + "hangtag-" + referenceorder + ".csv");
+            if (!file.exists()) {
+                // backward compatibility with hangtag-{poNumber}.csv
+                String poNumber = referenceorder.substring(5, 11);
+                file = new File(UPLOAD_DIR + "hangtag-" + poNumber + ".csv");
+                if (!file.exists()) {
+                    return ResponseEntity.notFound().build();
+                }
+            }
             final InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             httpHeaders.set(HttpHeaders.LAST_MODIFIED, String.valueOf(file.lastModified()));
             httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
@@ -433,7 +441,7 @@ public class OrderController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
         } catch (Exception e) {
-            log.error("Unable to open layout file", e);
+            log.error("Unable to open csv file", e);
         }
         return ResponseEntity.notFound().build();
     }

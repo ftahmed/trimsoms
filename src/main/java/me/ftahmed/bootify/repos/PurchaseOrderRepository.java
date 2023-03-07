@@ -10,6 +10,7 @@ import me.ftahmed.bootify.domain.PurchaseOrder;
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
 
     PurchaseOrder findByProductAndPoNumber(String product, String poNumber);
+    PurchaseOrder findByProductAndReferenceOrder(String product, String referenceOrder);
 
     List<PurchaseOrder> findByProductOrderByPoNumber(String product);
     List<PurchaseOrder> findByProductAndVendorCodeOrderByPoNumber(String product, String vendorCode);

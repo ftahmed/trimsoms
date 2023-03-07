@@ -55,7 +55,7 @@ spring:
     cache: false
   devtools.livereload.enabled: true
 logging:
-  file.name: target/application-dev.log
+  # file.name: target/application-dev.log
   # pattern:
   #   file: "%d %-5level [%thread] %logger : %msg%n"
   level:

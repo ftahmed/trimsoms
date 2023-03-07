@@ -21,6 +21,10 @@ public class PurchaseOrderService {
     public PurchaseOrder findByProductAndPoNumber(final String product, final String poNumber) {
         return poRepository.findByProductAndPoNumber(product, poNumber);
     }
+
+    public PurchaseOrder findByProductAndReferenceOrder(final String product, final String referenceOrder) {
+        return poRepository.findByProductAndReferenceOrder(product, referenceOrder);
+    }
     
     public List<PurchaseOrder> findByProduct(final String product) {
         return poRepository.findByProductOrderByPoNumber(product);

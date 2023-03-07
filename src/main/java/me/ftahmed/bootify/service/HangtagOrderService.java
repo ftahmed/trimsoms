@@ -34,6 +34,10 @@ public class HangtagOrderService {
         return htOrderRepository.findByPoNumberOrderById(poNumber);
     }
 
+    public List<HangtagOrder> findByReferenceorder(String referenceorder) {
+        return htOrderRepository.findByReferenceorderOrderById(referenceorder);
+    }
+
     public Long create(final HangtagOrder order) {
         return htOrderRepository.save(order).getId();
     }
