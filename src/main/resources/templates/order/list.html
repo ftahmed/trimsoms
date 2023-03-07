@@ -20,12 +20,13 @@
                             <th th:text="#{order.poNumber.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketType.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketName.label}" scope="col" />
-                            <th th:text="#{order.vendorCode.label}" scope="col" />
+                            <!-- <th th:text="#{order.vendorCode.label}" scope="col" /> -->
                             <th th:text="#{order.factoryName1.label}" scope="col" />
                             <th th:text="#{order.quantity.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
-                            <th><!-- --></th>
+                            <th sec:authorize="!hasRole('VEN')"><!-- --></th>
+                            <th sec:authorize="!hasRole('VEN')"><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +36,7 @@
                             <td th:text="${po.poNumber}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.code}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.name}" />
-                            <td th:text="${po.vendorCode}" />
+                            <!-- <td th:text="${po.vendorCode}" /> -->
                             <td th:text="${po.factoryName1}" />
                             <td th:text="${po.totalQty}" />
                             <td th:text="${po.status}"/>
@@ -46,6 +47,10 @@
                                             <img src="/images/pencil-square.svg" width="20" height="20"/>
                                         </button>
                                     </a>
+                                </div>
+                            </td>
+                            <td sec:authorize="!hasRole('VEN')">
+                                <div class="float-end text-nowrap">
                                     <a th:if="${product == 'hangtag'}" th:href="@{/order/htcsv/{poNumber}(poNumber=${po.poNumber})}">
                                         <button type="button" class="btn btn-outline">
                                             <img src="/images/download.png" width="20" height="20"/>
@@ -53,7 +58,7 @@
                                     </a>
                                 </div>
                             </td>
-                            <td>
+                            <td sec:authorize="!hasRole('VEN')">
                                 <div class="float-end text-nowrap">
                                     <form th:action="@{/order/manage/{poNumber}/status(poNumber=${po.poNumber})}" method="post" >
                                         <input type="hidden" name="product" id="product" th:value="${product}" />

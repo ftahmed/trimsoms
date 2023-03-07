@@ -8,6 +8,8 @@ INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, p
 WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passa1', (TABLE salt)) WHERE username = 'a1';
 INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('t1', 'GMS', 'Trims', '2000-01-01', 't1@gmstrims.co', '0123456789', '');
 WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passt1', (TABLE salt)) WHERE username = 't1';
+INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('v1', 'GMS', 'Vendor', '2000-01-01', 'v1@gmstrims.co', '0987654321', '');
+WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passv1', (TABLE salt)) WHERE username = 'v1';
 
 INSERT INTO "user" (username, first_name, last_name, dob, email, phone_number, password) VALUES ('gmsadmin', 'GMS', 'Admin', '2000-01-01', 'gmsadmin@gmstrims.co', '0123456780', '');
 WITH salt AS (SELECT gen_salt('bf', 8) AS salt) UPDATE "user" SET password = crypt('passa1', (TABLE salt)) WHERE username = 'gmsadmin';
@@ -38,6 +40,7 @@ INSERT INTO role (role_name) VALUES ('ADMIN');
 -- UserRole ManyToMany relation
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='a1'), (SELECT id FROM role WHERE role_name='ADMIN'));
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='t1'), (SELECT id FROM role WHERE role_name='TRM'));
+INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='v1'), (SELECT id FROM role WHERE role_name='VEN'));
 
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmsadmin'), (SELECT id FROM role WHERE role_name='ADMIN'));
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM "user" WHERE username='gmstrims'), (SELECT id FROM role WHERE role_name='TRM'));
@@ -194,6 +197,7 @@ INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
 -- select * from brand;
 
 -- Vendor
+INSERT INTO vendor (vendor_code, vendor_name) VALUES ('000000', 'Test Vendor');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214204', 'Saadatia Sweaters Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214060', 'Mascot Ltd. DMCC');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213535', 'Floreal International Ltd.');
@@ -203,6 +207,7 @@ INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213764', 'Aman Tex Ltd.')
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214240', 'GMS Textiles Ltd.');
 
 -- select * from vendor;
+UPDATE "user" SET vendor_vendor_code = '000000' WHERE username = 'v1';
 UPDATE "user" SET vendor_vendor_code = '214204' WHERE username = 'saadatia';
 UPDATE "user" SET vendor_vendor_code = '214060' WHERE username = 'mascot';
 UPDATE "user" SET vendor_vendor_code = '213535' WHERE username = 'floreal';

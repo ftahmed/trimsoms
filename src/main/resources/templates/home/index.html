@@ -16,13 +16,13 @@
                                 <tr>
                                     <th th:text="#{navigation.product.label}" scope="col" />
                                     <th th:text="#{navigation.count.label}" scope="col" />
-                                    <th><!----></th>
+                                    <th sec:authorize="!hasRole('VEN')"><!----></th>
                                     <th><!----></th>
                                 </tr>
                                 <tr>
                                     <td th:text="#{navigation.carelabel}"></td>
                                     <td th:text="${''}"></td>
-                                    <td>
+                                    <td sec:authorize="!hasRole('VEN')">
                                         <div class="float-end text-nowrap">
                                             <a th:href="@{/order/upload/carelabel}">
                                                 <button type="button" class="btn btn-outline">
@@ -44,7 +44,7 @@
                                 <tr>
                                     <td th:text="#{navigation.hangtag}"></td>
                                     <td th:text="${''}"></td>
-                                    <td>
+                                    <td sec:authorize="!hasRole('VEN')">
                                         <div class="float-end text-nowrap">
                                             <a th:href="@{/order/upload/hangtag}">
                                                 <button type="button" class="btn btn-outline">
