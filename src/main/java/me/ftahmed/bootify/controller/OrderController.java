@@ -54,9 +54,9 @@ import me.ftahmed.bootify.domain.Address;
 import me.ftahmed.bootify.domain.HangtagOrder;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrder;
-import me.ftahmed.bootify.domain.Ticket;
 import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.domain.Vendor;
+import me.ftahmed.bootify.repos.TrimsItemRepository;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.HangtagOrderService;
@@ -223,7 +223,6 @@ public class OrderController {
 
     @Transactional
     private int uploadHangtagOrders(final Path path, final String originalFilename) {
-        // TODO upload hangtag orders
         Charset cs = StandardCharsets.UTF_8;
         try (FileInputStream fis = new FileInputStream(path.toFile())) {
             cs = ByteUtils.detectEncoding(fis);
@@ -657,4 +656,15 @@ public class OrderController {
         return "redirect:/order/manage/"+poNumber;
     }
 
+    @Autowired
+    TrimsItemRepository tiRepo;
+
+    @GetMapping("/order/show/trims")
+    public String show(final Model model) {
+ 
+        // trims page
+        model.addAttribute("trimsitems", tiRepo.findAll());
+
+        return "order/trims";
+    }
 }

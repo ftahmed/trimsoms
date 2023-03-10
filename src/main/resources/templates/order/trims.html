@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{trims.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{trims.list.headline}" class="flex-grow-1" />
+            </div>
+            <!-- list of trims items -->
+            <div class="content">
+                <p th:if="${!trimsitems.empty}" class="h5" th:text="#{trims.subhead.quantities}">Enter trims quantities</p>
+                <p th:if="${!trimsitems.empty}" class="border-top">&nbsp;</p>
+                <div th:if="${!trimsitems.empty}" class="table-responsive">
+                    <form th:action="@{/order/create/trims}" method="post" >
+                        <input type="submit" th:value="#{trims.submit.label}" class="btn btn-primary float-end" sec:authorize="!hasRole('TRM')"/>
+                        <table class="table table-striped table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th th:text="#{trimsitems.select.label}" scope="col" />
+                                    <th th:text="#{trimsitems.brand.label}" scope="col" />
+                                    <th th:text="#{trimsitems.intexnumber.label}" scope="col" />
+                                    <th th:text="#{trimsitems.description.label}" scope="col" />
+                                    <th th:text="#{trimsitems.style.label}" scope="col" />
+                                    <th th:text="#{trimsitems.picture.label}" scope="col" />
+                                    <th th:text="#{trimsitems.price.label}" scope="col" />
+                                    <th th:text="#{trimsitems.totalqty.label}" scope="col" />
+                                    <th th:text="#{trimsitems.sizeqty.label}" scope="col" />
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="trims : ${trimsitems}">
+                                    <td>
+                                        <input type="checkbox" class="form-check-input" id="tiselect" name="tiselect" value="Y" />
+                                    </td>
+                                    <td th:text="${trims.brand}" />
+                                    <td th:text="${trims.intexNumber}" />
+                                    <td th:text="${trims.description}" />
+                                    <td th:text="${trims.style}" />
+                                    <td th:text="${trims.picture}" />
+                                    <td th:text="${trims.price}" />
+                                    <td th:text="${'?'}" />
+                                    <td sec:authorize="!hasRole('TRM')">
+                                        <div class="float-end text-nowrap">
+                                            <div class="col">
+                                                <input type="hidden" id="tiid" name="tiid" th:value="${trims.id}" />
+                                                <input type="number" class="form-control" th:id="sizeqty" th:name="sizeqty" disabled="Y" th:value="${'0'}" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

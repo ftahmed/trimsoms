@@ -313,12 +313,13 @@ INSERT INTO ticket (code, "name") VALUES ('5100067', 'So Cosy');
 INSERT INTO ticket (code, "name") VALUES ('5100068', 'Cartoon UPgreat');
 INSERT INTO ticket (code, "name") VALUES ('5100069', 'Cartoon UPgreat');
 INSERT INTO ticket (code, "name") VALUES ('6000000', 'SMS Tag');
+INSERT INTO ticket (code, "name") VALUES ('', '');
 
 COMMIT;
 
 BEGIN;
 
-INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty Barclay + so cosy + Gil Bret', '40-76-2908' , 'String' , 'Ribbon', 14.00);
+INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty Barclay + so cosy + Gil Bret', '40-76-2908' , 'String' , 'Ribbon', '14.00');
 INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '40-76-2991', 'Woven', 'Ribbon', '65.00');
 INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Cartoon', '40-76-2992', 'String', 'Ribbon', '100.00');
 INSERT INTO trims_item (brand, intex_number, label_type, description, price) VALUES ('Betty & Co Amber & June', '40-76-703', 'Seal', 'String for pricetag', '10.00');

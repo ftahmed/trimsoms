@@ -21,13 +21,16 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class TrimsItem {
+public class TrimsOrder {
 
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     
+    
+    @Column(nullable = false)
+    private String poNumber;
+
     @Column(nullable = false)
     private String brand;
     
@@ -38,19 +41,10 @@ public class TrimsItem {
     private String labelType;
     
     @Column(nullable = false)
-    private String description;
+    private Integer quantity;
     
-    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
-    private String style;
-    
-    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
-    private String picture;
-
-    // @Column(nullable = false, precision=12, scale=2, columnDefinition = "DECIMAL(12,2)")
-    // private BigDecimal price;
-
-    @Column(nullable = false)
-    private String price;
+    @Column(nullable = false, columnDefinition = "DECIMAL(12,2)")
+    private BigDecimal price;
 
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")

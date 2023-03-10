@@ -18,14 +18,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "product", "poNumber" }) })
+// @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "product", "poNumber" }) })
 @Getter
 @Setter
 public class PurchaseOrder {
