@@ -138,3 +138,7 @@ $("form#ciform").on("submit", function() {
     $("select#cilist option").prop('selected', 'selected')
     return true;
 });
+
+$("input#tiselect").click(function(){
+    $('input[data-tiid='+$(this).attr("value")+']').prop('disabled', function(i, v) { return !v; }); 
+});

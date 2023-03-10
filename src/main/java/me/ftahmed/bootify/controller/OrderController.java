@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -54,9 +55,12 @@ import me.ftahmed.bootify.domain.Address;
 import me.ftahmed.bootify.domain.HangtagOrder;
 import me.ftahmed.bootify.domain.Order;
 import me.ftahmed.bootify.domain.PurchaseOrder;
+import me.ftahmed.bootify.domain.TrimsItem;
+import me.ftahmed.bootify.domain.TrimsOrder;
 import me.ftahmed.bootify.domain.User;
 import me.ftahmed.bootify.domain.Vendor;
 import me.ftahmed.bootify.repos.TrimsItemRepository;
+import me.ftahmed.bootify.repos.TrimsOrderRepository;
 import me.ftahmed.bootify.repos.UserRepository;
 import me.ftahmed.bootify.service.CompositionItemService;
 import me.ftahmed.bootify.service.HangtagOrderService;
@@ -658,13 +662,62 @@ public class OrderController {
 
     @Autowired
     TrimsItemRepository tiRepo;
+    @Autowired
+    TrimsOrderRepository toRepo;
 
     @GetMapping("/order/show/trims")
     public String show(final Model model) {
  
-        // trims page
+        model.addAttribute("vid", -1);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginUsername = authentication.getName();
+        User user = userRepository.findByUsername(loginUsername).orElse(new User());
+        if (user.getVendor() != null) { // && authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_VEN"))) {
+            model.addAttribute("vid", user.getVendor().getId());
+        }
+        model.addAttribute("vendors", vendorService.findAll());
         model.addAttribute("trimsitems", tiRepo.findAll());
 
         return "order/trims";
     }
+
+    @PostMapping("/order/create/trims")
+    public String create(@RequestParam() final String vendor, @RequestParam() List<String> tiselect, @RequestParam() List<String> sizeqty, 
+            final RedirectAttributes attributes, final Model model) {
+
+        Vendor v = vendorService.findByVendorCode(vendor).orElse(new Vendor());
+        if (v.getVendorCode() == null) {
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("trims.vendor.fail") + '!');
+        }
+        int count = 0;
+        for (int i=0; i<tiselect.size(); i++) {
+            TrimsItem item = tiRepo.findById(Long.valueOf(tiselect.get(i))).orElse(new TrimsItem());
+            int quantity = Integer.parseInt(sizeqty.get(i));
+            if (item.getId() != null && quantity > 0) {
+                // TODO create trims order
+                TrimsOrder order = new TrimsOrder();
+                order.setVendor(v);
+                order.setBrand(item.getBrand());
+                order.setIntexNumber(item.getIntexNumber());
+                order.setLabelType(item.getLabelType());
+                order.setItem("");
+                order.setQuantity(quantity);
+                BigDecimal price = (new BigDecimal(item.getPrice())).multiply(new BigDecimal(order.getQuantity())).divide(BigDecimal.valueOf(1000L));
+                order.setPrice(price.toPlainString());
+                TrimsOrder to = toRepo.save(order);
+                count++;
+            }
+        }
+        if (count == 0) {
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("trims.items.fail") + '!');
+
+            return "redirect:/order/show/trims";
+        }
+
+        // return success response
+        attributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("trims.create.success") + '!');
+
+        return "redirect:/order/list/trims";
+    }
+
 }

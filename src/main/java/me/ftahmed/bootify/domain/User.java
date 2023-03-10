@@ -73,7 +73,7 @@ public class User {
     private Set<Role> roles;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "vendorCode")
+    @JoinColumn(name="vendorCode", referencedColumnName = "vendorCode")
     private Vendor vendor;
 
     @CreatedDate

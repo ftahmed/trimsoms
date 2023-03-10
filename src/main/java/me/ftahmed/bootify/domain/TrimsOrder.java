@@ -6,14 +6,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.ibm.icu.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +29,15 @@ public class TrimsOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String poNumber;
+    @ManyToOne
+    @JoinColumn(name="vendorCode", referencedColumnName = "vendorCode")
+    private Vendor vendor;
+    
+    @Column(nullable = false, insertable = false, columnDefinition="serial")
+    private Integer poNumber;
+
+    @Column(nullable = false, insertable = false, columnDefinition="serial")
+    private Integer referenceorder;
 
     @Column(nullable = false)
     private String brand;
@@ -39,12 +47,18 @@ public class TrimsOrder {
     
     @Column(nullable = false)
     private String labelType;
+
+    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
+    private String item;
     
     @Column(nullable = false)
     private Integer quantity;
     
-    @Column(nullable = false, columnDefinition = "DECIMAL(12,2)")
-    private BigDecimal price;
+    // @Column(nullable = false, columnDefinition = "DECIMAL(12,2)")
+    // private BigDecimal price;
+
+    @Column(nullable = false)
+    private String price;
 
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")

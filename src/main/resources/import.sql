@@ -207,14 +207,14 @@ INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213764', 'Aman Tex Ltd.')
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214240', 'GMS Textiles Ltd.');
 
 -- select * from vendor;
-UPDATE "user" SET vendor_vendor_code = '000000' WHERE username = 'v1';
-UPDATE "user" SET vendor_vendor_code = '214204' WHERE username = 'saadatia';
-UPDATE "user" SET vendor_vendor_code = '214060' WHERE username = 'mascot';
-UPDATE "user" SET vendor_vendor_code = '213535' WHERE username = 'floreal';
-UPDATE "user" SET vendor_vendor_code = '213970' WHERE username = 'gmsc';
-UPDATE "user" SET vendor_vendor_code = '214088' WHERE username = 'metro';
-UPDATE "user" SET vendor_vendor_code = '213764' WHERE username = 'aman';
-UPDATE "user" SET vendor_vendor_code = '214240' WHERE username = 'gmst';
+UPDATE "user" SET vendor_code = '000000' WHERE username = 'v1';
+UPDATE "user" SET vendor_code = '214204' WHERE username = 'saadatia';
+UPDATE "user" SET vendor_code = '214060' WHERE username = 'mascot';
+UPDATE "user" SET vendor_code = '213535' WHERE username = 'floreal';
+UPDATE "user" SET vendor_code = '213970' WHERE username = 'gmsc';
+UPDATE "user" SET vendor_code = '214088' WHERE username = 'metro';
+UPDATE "user" SET vendor_code = '213764' WHERE username = 'aman';
+UPDATE "user" SET vendor_code = '214240' WHERE username = 'gmst';
 
 -- Country
 INSERT INTO country (code, "name") VALUES ('BD', 'Bangladesh');

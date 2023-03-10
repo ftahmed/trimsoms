@@ -17,7 +17,8 @@
                         <tr>
                             <th th:text="#{order.brand.label}" scope="col" />
                             <th th:text="#{order.season.label}" scope="col" />
-                            <th th:text="#{order.poNumber.label}" scope="col" />
+                            <th th:if="${product == 'carelabel'}" th:text="#{order.poNumber.label}" scope="col" />
+                            <th th:if="${product == 'hangtag'}" th:text="#{order.referenceOrder.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketType.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketName.label}" scope="col" />
                             <!-- <th th:text="#{order.vendorCode.label}" scope="col" /> -->
@@ -33,7 +34,8 @@
                         <tr th:each="po : ${pos}">
                             <td th:text="${po.brand}" />
                             <td th:text="${po.season}" />
-                            <td th:text="${po.poNumber}" />
+                            <td th:if="${product == 'carelabel'}" th:text="${po.poNumber}" />
+                            <td th:if="${product == 'hangtag'}" th:text="${po.referenceOrder}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.code}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.name}" />
                             <!-- <td th:text="${po.vendorCode}" /> -->
