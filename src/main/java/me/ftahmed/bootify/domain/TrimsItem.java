@@ -46,6 +46,7 @@ public class TrimsItem {
     @Column(nullable = false, columnDefinition = "varchar(255) default ''")
     private String picture;
 
+    // TODO: Use BigDecimal
     // @Column(nullable = false, precision=12, scale=2, columnDefinition = "DECIMAL(12,2)")
     // private BigDecimal price;
 

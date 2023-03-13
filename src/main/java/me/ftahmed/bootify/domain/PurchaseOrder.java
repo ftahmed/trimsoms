@@ -66,10 +66,10 @@ public class PurchaseOrder {
     @Column
     private String vendorCode;
 
-    @Column
+    @Column(unique = true)
     private String orderFile;
 
-    @Column
+    @Column(unique = true)
     private String orderOriginalFile;
 
     @Column

@@ -33,16 +33,16 @@ public class TrimsOrder {
     @JoinColumn(name="vendorCode", referencedColumnName = "vendorCode")
     private Vendor vendor;
     
-    @Column(nullable = false, insertable = false, columnDefinition="serial")
-    private Integer poNumber;
+    @Column(unique = true, nullable = false)
+    private String poNumber;
 
-    @Column(nullable = false, insertable = false, columnDefinition="serial")
-    private Integer referenceorder;
+    @Column(unique = true, nullable = false)
+    private String referenceorder;
 
     @Column(nullable = false)
     private String brand;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String intexNumber;
     
     @Column(nullable = false)
@@ -53,7 +53,8 @@ public class TrimsOrder {
     
     @Column(nullable = false)
     private Integer quantity;
-    
+
+    // TODO: Use BigDecimal
     // @Column(nullable = false, columnDefinition = "DECIMAL(12,2)")
     // private BigDecimal price;
 

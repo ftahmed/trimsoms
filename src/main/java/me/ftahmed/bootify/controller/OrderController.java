@@ -693,6 +693,7 @@ public class OrderController {
         for (int i=0; i<tiselect.size(); i++) {
             TrimsItem item = tiRepo.findById(Long.valueOf(tiselect.get(i))).orElse(new TrimsItem());
             int quantity = Integer.parseInt(sizeqty.get(i));
+            // TODO create purchase order
             if (item.getId() != null && quantity > 0) {
                 // TODO create trims order
                 TrimsOrder order = new TrimsOrder();
