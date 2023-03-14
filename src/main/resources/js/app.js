@@ -139,6 +139,15 @@ $("form#ciform").on("submit", function() {
     return true;
 });
 
-$("input#tiselect").click(function(){
+$("input#tiid").click(function(){
     $('input[data-tiid='+$(this).attr("value")+']').prop('disabled', function(i, v) { return !v; }); 
+});
+
+$("input#tis1qty").change(function(){
+    var thisval = parseInt($(this).val());
+    if (isNaN(thisval)) {
+        $(this).val(0);
+    } else if (thisval < 100) {
+        $(this).val(100);
+    }
 });

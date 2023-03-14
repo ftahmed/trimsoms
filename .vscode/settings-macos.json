@@ -1,33 +1,14 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.runtimes": [
-        {
-          "name": "JavaSE-1.8",
-          "path": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home",
-          "javadoc": "https://docs.oracle.com/javase/8/docs/api/",
-          "sources": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/src.zip"
-        },
-        {
-          "name": "JavaSE-17",
-          "path": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
-          "javadoc": "https://docs.oracle.com/en/java/javase/17/docs/api",
-          "sources": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home/lib/src.zip",
-          "default": true
-        }
-      ],
-      "sqltools.connections": [
-        {
-          "previewLimit": 50,
-          "server": "localhost",
-          "port": 5432,
-          "askForPassword": true,
-          "driver": "PostgreSQL",
-          "name": "pg_db1",
-          "database": "mydb",
-          "username": "myuser"
-        }
-      ],
-      "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
-      // "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -javaagent:\"/home/tanvir/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
-      "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home"
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "pg_db1",
+      "database": "mydb",
+      "username": "myuser"
+    }
+  ],
 }

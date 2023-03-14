@@ -1,0 +1,32 @@
+{
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": false
+    },
+    // "java.import.gradle.java.home": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home",
+    "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
+    "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk@17/17.0.5/libexec/openjdk.jdk/Contents/Home",
+    "dart.openDevTools": "flutter",
+    "dart.debugExternalPackageLibraries": false,
+    "dart.debugSdkLibraries": false,
+    "xml.server.vmargs": "-Xmx128M",
+    "redhat.telemetry.enabled": false,
+    "[xml]": {
+        "editor.defaultFormatter": "DotJoshJohnson.xml"
+    },
+    "boot-java.rewrite.reconcile": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "[java]": {
+        "editor.suggest.snippetsPreventQuickSuggestions": true
+    },
+    // "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m"
+    "java.jdt.ls.vmargs": "-Xmx4G -XX:MaxHeapFreeRatio=30 -XX:MinHeapFreeRatio=10"
+}

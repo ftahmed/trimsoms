@@ -137,7 +137,7 @@
                                     <span th:text="#{order.cilist.label}" />
                                 </label>
                                 <div class="col-md-9">
-                                    <select id="cilist" name="cilist" size="5" multiple="" class="form-select">
+                                    <select id="cilist" name="cilist" size="10" multiple="" class="form-select">
                                         <option th:each="ci : ${cilist}" th:value="${ci}" th:text="${#strings.replace(#strings.substringAfter(ci, ':'), ':', ' ')}" />
                                     </select>
                                     <div class="row">

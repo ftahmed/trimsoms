@@ -109,6 +109,9 @@ public class PurchaseOrder {
     @Column
     private String printerNotes;
 
+    @Column
+    private String price;
+
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "timestamptz default CURRENT_TIMESTAMP")
     private OffsetDateTime dateCreated;

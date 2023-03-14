@@ -197,7 +197,6 @@ INSERT INTO brand (id, brand_name) VALUES (9, 'Amber & June');
 -- select * from brand;
 
 -- Vendor
-INSERT INTO vendor (vendor_code, vendor_name) VALUES ('000000', 'Test Vendor');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214204', 'Saadatia Sweaters Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214060', 'Mascot Ltd. DMCC');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213535', 'Floreal International Ltd.');
@@ -205,9 +204,10 @@ INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213970', 'GMS Composite K
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214088', 'Metro Knitting & Dyeing Mills Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('213764', 'Aman Tex Ltd.');
 INSERT INTO vendor (vendor_code, vendor_name) VALUES ('214240', 'GMS Textiles Ltd.');
+INSERT INTO vendor (vendor_code, vendor_name) VALUES ('999999', 'Test Vendor');
 
 -- select * from vendor;
-UPDATE "user" SET vendor_code = '000000' WHERE username = 'v1';
+UPDATE "user" SET vendor_code = '999999' WHERE username = 'v1';
 UPDATE "user" SET vendor_code = '214204' WHERE username = 'saadatia';
 UPDATE "user" SET vendor_code = '214060' WHERE username = 'mascot';
 UPDATE "user" SET vendor_code = '213535' WHERE username = 'floreal';

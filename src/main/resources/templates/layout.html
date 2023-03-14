@@ -55,7 +55,7 @@
                                 <a th:text="#{navigation.trims}" class="nav-link dropdown-toggle" href="#" id="navbarEntitiesLink" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false" />
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
-                                    <li><a th:href="@{/order/show/trims}" th:text="#{navigation.show}" class="dropdown-item" sec:authorize="!hasRole('VEN')" /></li>
+                                    <li><a th:href="@{/order/show/trims}" th:text="#{navigation.ordering}" class="dropdown-item" sec:authorize="!hasRole('TRM')" /></li>
                                     <li><a th:href="@{/order/list/trims}" th:text="#{navigation.list}" class="dropdown-item" /></li>
                                 </ul>
                             </li>

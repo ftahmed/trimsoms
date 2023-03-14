@@ -52,7 +52,7 @@ public class TrimsOrder {
     private String item;
     
     @Column(nullable = false)
-    private Integer quantity;
+    private Long quantity;
 
     // TODO: Use BigDecimal
     // @Column(nullable = false, columnDefinition = "DECIMAL(12,2)")

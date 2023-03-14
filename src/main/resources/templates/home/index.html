@@ -63,6 +63,28 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td th:text="#{navigation.trims}"></td>
+                                    <td th:text="${''}"></td>
+                                    <td sec:authorize="!hasRole('VEN')">
+                                        <div class="float-end text-nowrap">
+                                            <a th:href="@{/order/show/trims}">
+                                                <button type="button" class="btn btn-outline">
+                                                    <img src="/images/import.png" width="20" height="20"/>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="float-end text-nowrap">
+                                            <a th:href="@{/order/list/trims}">
+                                                <button type="button" class="btn btn-outline">
+                                                    <img src="/images/list.svg" width="20" height="20"/>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             </thead>
                         </table>
                     </div>

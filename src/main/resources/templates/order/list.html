@@ -16,14 +16,19 @@
                     <thead>
                         <tr>
                             <th th:text="#{order.brand.label}" scope="col" />
-                            <th th:text="#{order.season.label}" scope="col" />
+                            <th th:if="${product != 'trims'}" th:text="#{order.season.label}" scope="col" />
+                            <th th:if="${product == 'trims'}" th:text="#{order.intexnumber.label}" scope="col" />
                             <th th:if="${product == 'carelabel'}" th:text="#{order.poNumber.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.referenceOrder.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketType.label}" scope="col" />
                             <th th:if="${product == 'hangtag'}" th:text="#{order.ticketName.label}" scope="col" />
+                            <th th:if="${product == 'trims'}" th:text="#{order.labeltype.label}" scope="col" />
+                            <th th:if="${product == 'trims'}" th:text="#{order.item.label}" scope="col" />
                             <!-- <th th:text="#{order.vendorCode.label}" scope="col" /> -->
                             <th th:text="#{order.factoryName1.label}" scope="col" />
-                            <th th:text="#{order.quantity.label}" scope="col" />
+                            <th scope="col"><div th:text="#{order.quantity.label}" class="float-end" /></th>
+                            <th th:if="${product == 'trims'}" scope="col" /><div th:text="#{order.price.label}" class="float-end" /></th>
+                            <th th:text="#{order.dateCreated.label}" scope="col" />
                             <th th:text="#{order.orderStatus.label}" scope="col" />
                             <th><!-- --></th>
                             <th sec:authorize="!hasRole('VEN')"><!-- --></th>
@@ -38,9 +43,13 @@
                             <td th:if="${product == 'hangtag'}" th:text="${po.referenceOrder}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.code}" />
                             <td th:if="${product == 'hangtag'}" th:text="${po.ticket.name}" />
+                            <td th:if="${product == 'trims'}" th:text="${po.type}" />
+                            <td th:if="${product == 'trims'}" th:text="${''}" />
                             <!-- <td th:text="${po.vendorCode}" /> -->
                             <td th:text="${po.factoryName1}" />
-                            <td th:text="${po.totalQty}" />
+                            <td class="col"><div th:text="${po.totalQty}" class="float-end" /></td>
+                            <td th:if="${product == 'trims'}" class="col"><div th:text="${po.price}" class="float-end" /></td>
+                            <td th:text="${#temporals.format(po.dateCreated, 'dd-MMM-yyyy')}" />
                             <td th:text="${po.status}"/>
                             <td>
                                 <div class="float-end text-nowrap">

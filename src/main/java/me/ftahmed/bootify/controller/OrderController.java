@@ -682,22 +682,34 @@ public class OrderController {
     }
 
     @PostMapping("/order/create/trims")
-    public String create(@RequestParam() final String vendor, @RequestParam() List<String> tiselect, @RequestParam() List<String> sizeqty, 
+    public String create(@RequestParam() final String vendor, @RequestParam() List<String> tiid, @RequestParam() List<String> tis1qty, 
             final RedirectAttributes attributes, final Model model) {
 
         Vendor v = vendorService.findByVendorCode(vendor).orElse(new Vendor());
         if (v.getVendorCode() == null) {
             attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("trims.vendor.fail") + '!');
+            return "redirect:/order/show/trims";
         }
         int count = 0;
-        for (int i=0; i<tiselect.size(); i++) {
-            TrimsItem item = tiRepo.findById(Long.valueOf(tiselect.get(i))).orElse(new TrimsItem());
-            int quantity = Integer.parseInt(sizeqty.get(i));
-            // TODO create purchase order
+        String uniqref = "";
+        try {
+            // get a unique string
+            Path path = Files.createTempFile(Paths.get(UPLOAD_DIR), "", "");
+            uniqref = path.getFileName().toString();
+        } catch (Exception e) {
+            log.error("Unable to get uniqref", e);
+            attributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("trims.uniqref.fail") + '!');
+            return "redirect:/order/show/trims";
+        }
+        for (int i=0; i<tiid.size(); i++) {
+            TrimsItem item = tiRepo.findById(Long.valueOf(tiid.get(i))).orElse(new TrimsItem());
+            long quantity = Integer.parseInt(tis1qty.get(i));
             if (item.getId() != null && quantity > 0) {
                 // TODO create trims order
                 TrimsOrder order = new TrimsOrder();
                 order.setVendor(v);
+                order.setPoNumber(String.format("%s-%05d", uniqref, i));
+                order.setReferenceorder(order.getPoNumber());
                 order.setBrand(item.getBrand());
                 order.setIntexNumber(item.getIntexNumber());
                 order.setLabelType(item.getLabelType());
@@ -706,6 +718,25 @@ public class OrderController {
                 BigDecimal price = (new BigDecimal(item.getPrice())).multiply(new BigDecimal(order.getQuantity())).divide(BigDecimal.valueOf(1000L));
                 order.setPrice(price.toPlainString());
                 TrimsOrder to = toRepo.save(order);
+
+                // TODO create purchase order
+                PurchaseOrder po = new PurchaseOrder();
+                po.setProduct("trims");
+                po.setPoNumber(order.getPoNumber());
+                po.setReferenceOrder(order.getReferenceorder());
+                po.setBrand(order.getBrand());
+                po.setSeason(order.getIntexNumber());
+                po.setType(order.getLabelType());
+                po.setTotalQty(order.getQuantity());
+                po.setTotalQtyOrig(order.getQuantity());
+                po.setPrice(order.getPrice());
+                po.setStatus("New");
+                po.setVendorCode(order.getVendor().getVendorCode());
+                po.setFactoryName1(order.getVendor().getVendorName());
+                po.setOrderFile(order.getPoNumber());
+                po.setOrderOriginalFile(order.getPoNumber());
+                poService.create(po);
+
                 count++;
             }
         }
